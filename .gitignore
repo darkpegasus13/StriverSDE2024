@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/StriverSDE/StriverSDE/obj/Debug
+/StriverSDE/StriverSDE/bin/Debug
+/StriverSDE/.vs/StriverSDE/v16
