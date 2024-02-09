@@ -144,7 +144,8 @@ public class ArrayComp
 
     //Optimal 2 T=>O(N^2)
     //rememberr when to use list and when ilist
-    public IList<IList<int>> Generate(int numRows) {
+    public IList<IList<int>> Generate(int numRows)
+    {
         IList<IList<int>> triangle = new List<IList<int>>();
         if (numRows == 1)
         {
@@ -176,24 +177,30 @@ public class ArrayComp
     //Find all Permutation and then print the lexicographic next element
 
     //Optimal S=>O(1) and T=>O(3N)
-    public void NextPermutation(int[] nums) {
+    public void NextPermutation(int[] nums)
+    {
         //We are finding a break point that is a[i]<a[i+1]
-        int indx=-1;
+        int indx = -1;
         int n = nums.Length;
-        for(int i=n-2;i>=0;i--){
-            if(nums[i]<nums[i+1]){
-                indx=i;
+        for (int i = n - 2; i >= 0; i--)
+        {
+            if (nums[i] < nums[i + 1])
+            {
+                indx = i;
                 break;
             }
         }
         //if it is already the largest
-        if(indx==-1){
+        if (indx == -1)
+        {
             Array.Reverse(nums);
             return;
         }
-        int swapIndx=-1;
-        for(int i=n-1;i>indx;i--){
-            if(nums[i]>nums[indx]){
+        int swapIndx = -1;
+        for (int i = n - 1; i > indx; i--)
+        {
+            if (nums[i] > nums[indx])
+            {
                 if (swapIndx != -1)
                 {
                     if (nums[swapIndx] > nums[i])
@@ -204,10 +211,10 @@ public class ArrayComp
             }
         }
         //swapped the breakpoint with the smallest greater
-        (nums[swapIndx],nums[indx]) = (nums[indx],nums[swapIndx]);
+        (nums[swapIndx], nums[indx]) = (nums[indx], nums[swapIndx]);
         //reverse the array from indx+1 to end
         //as it was a increasing sequence
-        Array.Reverse(nums,indx+1,n-indx-1);
+        Array.Reverse(nums, indx + 1, n - indx - 1);
     }
     #endregion
 
@@ -257,14 +264,74 @@ public class ArrayComp
                 max_sum = meh;
                 //updating ansStrt only when max is found
                 ansStrt = start;
-                ansEnd= i;
+                ansEnd = i;
             }
             //whenever meh<0 we make it 0
             if (meh < 0)
                 meh = 0;
         }
-        for(int i = ansStrt; i <= ansEnd; i++)
+        for (int i = ansStrt; i <= ansEnd; i++)
             Console.WriteLine(nums[i]);
     }
+    #endregion
+
+    #region Sort 0s,1s,2s
+
+    //Naive S=>O(N) and T=>NlogN
+    //using sort function 
+
+    //Better S=>O(1) and T=>O(2N)
+    //By maintaining counts of all 3 in a map space will be constant it will be constant
+    //also we can maintain three variables as well
+
+    //Optimal S=>O(1) and T=>O(N)
+    //Dutch National Flag 0-low-1 are 0 and low-mid-1 are 1 and mid-high are random and high+1-n-1 are 2
+
+    void Sort3elementOptimal(int[] arr)
+    {
+        int low = 0, mid = 0, high = arr.Length - 1;
+        while (mid <= high)
+        {
+            if (arr[mid] == 0)
+            {
+                (arr[mid], arr[low]) = (arr[low], arr[mid]);
+                low++; mid++;
+            }
+            else if (arr[mid] == 2)
+            {
+                (arr[high], arr[mid]) = (arr[mid], arr[high]);
+                high--;
+            }
+            else
+                mid++;
+        }
+    }
+
+    #endregion
+
+    #region Buy Sell Stocks
+
+    //Naive Solution S=>O(1) and T=>O(N^2)
+    //Calculate for every posiibility of stocks
+
+    //Optimal Solution S=>O(1) and T=>O(N)
+    //Store minimum till current indx and if current indx>min find the diff and store if greater
+
+    public int MaxProfitOptimal(int[] prices)
+    {
+        int res = 0;
+        int minmTillNow = int.MaxValue;
+        for(int i = 0; i < prices.Length; i++)
+        {
+            if (prices[i] > minmTillNow)
+                //calculating profit and then saving the largest
+                res = Math.Max(res, prices[i] - minmTillNow);
+            else
+                //setting new minimum
+                minmTillNow = prices[i];
+        }
+        return res;
+    }
+
     #endregion
 }
