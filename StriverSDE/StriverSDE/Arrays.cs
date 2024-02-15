@@ -321,7 +321,7 @@ public class ArrayComp
     {
         int res = 0;
         int minmTillNow = int.MaxValue;
-        for(int i = 0; i < prices.Length; i++)
+        for (int i = 0; i < prices.Length; i++)
         {
             if (prices[i] > minmTillNow)
                 //calculating profit and then saving the largest
@@ -333,5 +333,194 @@ public class ArrayComp
         return res;
     }
 
+    #endregion
+
+    #region 3 Sum 
+    //In this triplets are not the same
+
+    //remember to sort array as duplicates are now allowed
+    //Naive SOlution S=>O(N) for storing triplets and T=>O(N^3*log(unique triplets))
+    //using three loops 
+
+    //Better Solution S=>O(N) and T=>O(N^2*log(unique triplets))
+    //by maintaining elements in hashmap and running two loops
+
+    //Better Solution S=>O(N) and T=>O(NlogN + O(M*N))
+    //using three pointers
+
+    public IList<IList<int>> ThreeSum(int[] nums)
+    {
+        IList<IList<int>> ans = new List<IList<int>>();
+        Array.Sort(nums);
+        int n = nums.Length;
+        for (int i = 0; i < n; i++)
+        {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            int j = i + 1;
+            int k = n - 1;
+            while (j < k)
+            {
+                var temp = nums[i] + nums[j] + nums[k];
+                if (temp > 0)
+                    k--;
+                else if (temp < 0)
+                    j++;
+                else
+                {
+                    ans.Add(new List<int> { nums[i], nums[j], nums[k] });
+                    j++;
+                    k--;
+                    while (j < n && nums[j] == nums[j - 1])
+                        j++;
+                    while (k >= 0 && nums[k] == nums[k + 1])
+                        k--;
+                }
+            }
+        }
+        return ans;
+    }
+    #endregion
+
+    #region Trapping Rain Water
+
+    //Naive solution S=>O(1) and T+>O(N^2)
+    //calculate min of the left side and right side and then subtract
+    //the height of current ceiling min(left[i],right[i]-rainArr[i])
+
+
+    //Better solution S=>O(2N) and T=>O(3N)
+    //by keeping a prefix and suffix array
+
+    public int TrappingRainWaterBetter(int[] height)
+    {
+        int n = height.Length;
+        int[] suffix = new int[n];
+        int[] prefix = new int[n];
+        int res = 0;
+        //calculating prefix
+        int prefixLargest = int.MinValue;
+        int suffixLargest = int.MinValue;
+        for (int i = 0; i < n; i++)
+        {
+            prefixLargest = Math.Max(height[i], prefixLargest);
+            prefix[i] = prefixLargest;
+        }
+        //calculating prefix
+        for (int i = n - 1; i >= 0; i--)
+        {
+            suffixLargest = Math.Max(height[i], suffixLargest);
+            suffix[i] = suffixLargest;
+        }
+        for (int i = 0; i < n; i++)
+        {
+            res += Math.Min(suffix[i], prefix[i]) - height[i];
+        }
+        return res;
+    }
+
+
+    //Optimal solution
+    //two pointer approach
+    public int TrappingRainWaterOptimal(int[] rainArr)
+    {
+        int left = 0;
+        int right = rainArr.Length - 1;
+        int leftMax = 0;
+        int rightMax = 0;
+        int res = 0;
+        while (left <= right)
+        {
+            if (rainArr[left] <= rainArr[right])
+            {
+                if (rainArr[left] < leftMax)
+                    res += leftMax - rainArr[left];
+                else
+                    leftMax = Math.Max(leftMax, rainArr[left]);
+                left++;
+            }
+            else
+            {
+                if (rainArr[right] < rightMax)
+                    res += rightMax - rainArr[right];
+                else
+                    rightMax = Math.Max(rightMax, rainArr[right]);
+                right--;
+            }
+        }
+        return res;
+    }
+    #endregion
+
+    #region Remove Duplicate from sorted array and array should be in place
+
+    //Naive Solution
+    //using hashmap it works for non sorted as well
+    public int RemoveDuplicate(int[] nums)
+    {
+        Dictionary<int, int> dict = new Dictionary<int, int>();
+        for (int i = 0; i < nums.Length; i++)
+        {
+            if (dict.ContainsKey(nums[i]))
+                continue;
+            else
+                dict.Add(nums[i], 0);
+        }
+        int pos = 0;
+        foreach (KeyValuePair<int, int> pair in dict)
+        {
+            nums[pos] = pair.Key;
+            pos++;
+        }
+        return dict.Count;
+    }
+
+    //Optimal Solution
+    //making use of the fact that array is sorted
+
+    public int RemoveDuplicateOptimal(int[] nums)
+    {
+        //j pointer keeps the indx of last unique element
+        int j = 0;
+        //i pointer traverse the array and whenever find a different 
+        //element we swap i and j and increment both
+        int i = 0;
+        while (i < nums.Length)
+        {
+            if (nums[j] == nums[i])
+                i += 1;
+            else
+            {
+                j += 1;
+                nums[j] = nums[i];
+                i += 1;
+            }
+        }
+        return j + 1;
+    }
+    #endregion
+
+    #region Max Consecutive ones
+
+    //OPtimal Solution
+    //breaking the while loop as soon as we encounter a number
+    //other than 0 and storing max
+    public int FindMaxConsecutiveOnes(int[] nums)
+    {
+        int mxcont = -1;
+        for (int i = 0; i < nums.Length; i++)
+        {
+            int curr = 0;
+            //when encounter 1 start the loop and break when it is non 1
+            while (i < nums.Length && nums[i] == 1)
+            {
+                curr += 1;
+                i += 1;
+            }
+            //we have encountered something other than zero or i>length
+            mxcont = Math.Max(mxcont, curr);
+        }
+        return mxcont;
+    }
     #endregion
 }
