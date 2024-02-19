@@ -8,7 +8,100 @@ namespace StriverSDE
 {
     class StackandQueue
     {
+        #region Balanced Paranthesis
+        public bool IsValid(string s)
+        {
+            Dictionary<char, char> dict = new Dictionary<char, char>(){
+            {'(',')'},
+            {'[',']'},
+            {'{','}'}
+        };
+            Stack<char> st = new Stack<char>();
+            foreach (char c in s)
+            {
+                if (c == '(' || c == '{' || c == '[')
+                    st.Push(c);
+                else
+                    if (st.Count > 0 && c == dict[st.Peek()])
+                    st.Pop();
+                else
+                    return false;
+            }
+            return st.Count == 0 ? true : false;
+        }
+        #endregion
 
+        #region Next Greater Element
+        //finding greater element in a circular array
+        //Naive Solution S=>O(1) and T=>O(N^2)
+
+        public int[] NGE(int[] arr)
+        {
+            //first part finds NGE in the right 
+            int n = arr.Length;
+            int[] ans = new int[n];
+            Stack<int> st = new Stack<int>();
+            //we can consider appending the same list to right of orignal array
+            //but instead we will start from 2n
+            for(int i = 2*n-1; i >= 0; i--)
+            {
+                if (st.Count == 0)
+                    if(i<n)
+                        ans[i] = -1;
+                else
+                {
+                    while (st.Count>0 && st.Peek() < arr[i%n])
+                        st.Pop();
+                    if(i<n)
+                        ans[i] =st.Count==0?-1:st.Peek();
+                }
+                st.Push(arr[i%n]);
+            }
+            return ans;
+        }
+        #endregion
+
+        #region Sort A Stack Using Recursion
+
+        public void sortedInsert(Stack<int> s, int x)
+        {
+            // Base case: Either stack is empty or
+            // newly inserted item is greater than top
+            // (more than all existing)
+            if (s.Count == 0 || x > (int)s.Peek())
+            {
+                s.Push(x);
+                return;
+            }
+
+            // If top is greater, remove
+            // the top item and recur
+            int temp = (int)s.Peek();
+            s.Pop();
+            sortedInsert(s, x);
+
+            // Put back the top item removed earlier
+            s.Push(temp);
+        }
+
+        // Method to sort stack
+        public void sortStack(Stack<int> s)
+        {
+            // If stack is not empty
+            if (s.Count > 0)
+            {
+                // Remove the top item
+                int x = (int)s.Peek();
+                s.Pop();
+
+                // Sort remaining stack
+                sortStack(s);
+
+                // Push the top item back in sorted stack
+                sortedInsert(s, x);
+            }
+        }
+        #endregion
     }
     #region Implement Stack using Array
     class Stack
@@ -276,4 +369,59 @@ namespace StriverSDE
         }
     }
     #endregion
+
+    #region Implement Queue using stack
+
+    //First Solution
+    //using two stacks and push is O(N)
+    //we pop all element from 1st to 2nd then add new ele to 1
+    //and add all elements from 2nd to 1st
+    //assuming s1 and s2 are the stacks already created
+    //in this case top and pop are O(1)
+    //public void PushToStack(int ele)
+    //{
+    //    while (s1.Count > 0)
+    //    {
+    //        s2.Push(s1.Pop());
+    //    }
+    //    s1.Push(ele);
+    //    while (s2.Count > 0)
+    //    {
+    //        s1.Push(s2.Pop());
+    //    }
+    //}
+
+    //Second Solution
+    //using two stacks and push is O(1)
+    //we just normaly push to stack pop and top are O(N)
+
+    //public void POPStack()
+    //{
+    //    while (s1.Count > 0)
+    //    {
+    //        s2.Push(s1.Pop());
+    //    }
+    //    s2.Pop();
+    //    while (s2.Count > 0)
+    //    {
+    //        s1.Push(s2.Pop());
+    //    }
+    //}
+
+    //public void TopStack()
+    //{
+    //    while (s1.Count > 0)
+    //    {
+    //        s2.Push(s1.Pop());
+    //    }
+    //    s2.Top();
+    //    while (s2.Count > 0)
+    //    {
+    //        s1.Push(s2.Pop());
+    //    }
+    //}
+
+    #endregion
+
+
 }
