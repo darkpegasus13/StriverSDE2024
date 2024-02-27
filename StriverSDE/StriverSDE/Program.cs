@@ -30,15 +30,32 @@ namespace StriverSDE
 
             #region Stack and Queue
 
-            StackandQueue stq = new StackandQueue();
-            Stack<int> st = new Stack<int>();
-            st.Push(11);
-            st.Push(9);
-            st.Push(97);
-            stq.sortStack(st);
+            //StackandQueue stq = new StackandQueue();
+            //Stack<int> st = new Stack<int>();
+            //st.Push(11);
+            //st.Push(9);
+            //st.Push(97);
+            //stq.sortStack(st);
+
+            #endregion
+
+            #region Recursion
+
+            Recursion recur = new Recursion();
+            var res = recur.SubsetsWithDup(new int[] {1,2,2});
+            foreach(var i in res)
+            {
+                foreach(var j in i)
+                {
+                    Console.Write("{0},",j);
+                }
+                Console.WriteLine();
+            }
 
             #endregion
             Console.ReadLine();
         }
+
+
     }
 }
