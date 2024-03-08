@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Arrays.cs" />
     <Compile Include="Binary Tree.cs" />
+    <Compile Include="BinarySearch.cs" />
     <Compile Include="Greedy.cs" />
     <Compile Include="LinkedList.cs" />
     <Compile Include="Program.cs" />
