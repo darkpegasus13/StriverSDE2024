@@ -41,17 +41,27 @@ namespace StriverSDE
 
             #region Recursion
 
-            Recursion recur = new Recursion();
-            var res = recur.SubsetsWithDup(new int[] {1,2,2});
-            foreach(var i in res)
-            {
-                foreach(var j in i)
-                {
-                    Console.Write("{0},",j);
-                }
-                Console.WriteLine();
-            }
+            //Recursion recur = new Recursion();
+            //var res = recur.SubsetsWithDup(new int[] {1,2,2});
+            //foreach(var i in res)
+            //{
+            //    foreach(var j in i)
+            //    {
+            //        Console.Write("{0},",j);
+            //    }
+            //    Console.WriteLine();
+            //}
 
+            #endregion
+
+            #region Trie
+
+            Trie t = new Trie();
+            var ans=t.PowerSet("abc"); 
+            foreach(var i in ans)
+            {
+                Console.WriteLine(i);
+            }
             #endregion
             Console.ReadLine();
         }
