@@ -43,5 +43,167 @@ namespace StriverSDE
             return ans.Trim();
         }
         #endregion
+
+        #region Roman to Integer
+
+        //Naive solution 
+        //filling dictionary with numerals and subtracting the lower value
+        //from higher
+
+        public int RomanToInt(string s)
+        {
+            int l = s.Length,i = 0, val = 0;
+            Dictionary<char, int> m =
+            new Dictionary<char, int> { { 'I', 1 }, { 'V', 5 }, { 'X', 10 }, 
+                { 'L', 50 }, { 'C', 100 }, { 'D', 500 }, { 'M', 1000 } };
+            while (i < l - 1)
+            {
+                if (m[s[i]] < m[s[i + 1]])
+                {
+                    val += (m[s[i + 1]] - m[s[i]]);
+                    i = i + 2;
+                }
+                else
+                {
+                    val += m[s[i]];
+                    i += 1;
+                }
+            }
+            if (i < l)
+                val += m[s[i]];
+            return val;
+        }
+        #endregion
+
+        #region String to ATOI
+
+        //Solution S=>O(N) and T=>O(1)
+        //
+        public int MyAtoi(string s)
+        {
+            long res = 0;
+            var sign = 1;
+            s = s.Trim();
+            if (string.IsNullOrEmpty(s)) return 0;
+            int index = 0;
+            if (s[0] == '+' || s[0] == '-')
+            {
+                sign = s[0] == '+' ? 1 : -1;
+                index++;
+            }
+            while (index < s.Length)
+            {
+                if (char.IsNumber(s[index]))
+                {
+                    res = res * 10 + s[index] - '0';
+                    if (res * sign > int.MaxValue) return int.MaxValue;
+                    if (res * sign < int.MinValue) return int.MinValue;
+                }
+                else
+                {
+                    break;
+                }
+                index++;
+            }
+            return (int)res * sign;
+        }
+
+        #endregion
+        #region LongestCommonPrefix
+
+        //Solution S=>O(N*M) and T=>O(min(strs.len))
+        public string LongestCommonPrefix(string[] strs)
+        {
+            StringBuilder ans = new StringBuilder("");
+            for (int i = 0; i < strs[0].Length; i++)
+            {
+                foreach (string s in strs)
+                {
+                    if (i == s.Length || s[i] != strs[0][i])
+                    {
+                        return ans.ToString();
+                    }
+                }
+                ans.Append(strs[0][i]);
+            }
+            return ans.ToString();
+        }
+        #endregion
+
+        #region Longest Palindromic Substring
+
+        //Naive Solution S=>O(1) and T=>O(N^3)
+        //calculating all subsequence and then verifying if it is 
+        //palindrome
+
+        //Better Solution S=>O(1) and T=>O(N^2)
+        //by expanding from the point of considerations
+        public string LongestPalindromeSubstring(string s)
+        {
+            int resl = 0,resr = 0,len = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                //checking for odd length
+                int l = i;
+                int r = i;
+                while (l >= 0 && r < s.Length && s[l] == s[r])
+                {
+                    if (len < r - l + 1)
+                    {
+                        resr = r;
+                        len = r - l + 1;
+                        resl = l;
+                    }
+                    l -= 1;
+                    r += 1;
+                }
+                //checking for even length
+                l = i;
+                r = i + 1;
+                while (l >= 0 && r < s.Length && s[l] == s[r])
+                {
+                    if (len < r - l + 1)
+                    {
+                        resr = r + 1;
+                        len = r - l + 1;
+                        resl = l;
+                    }
+                    l -= 1;
+                    r += 1;
+                }
+            }
+            return s.Substring(resl, len);
+        }
+        #endregion
+
+        #region repeated string match
+        //find whether the string A can contain B by repeating adding the A
+
+        //Solution 
+        //by calculating the number of times a string is already present and add 2 to it
+        //as the string can be added before and after the string
+
+        public int RepeatedStringMatch(string a, string b)
+        {
+            int m = b.Length / a.Length;
+            string temp = a;
+            int cnt = 1;
+            for (int i = 0; i < m + 2; i++)
+            {
+                if (a.Contains(b))
+                {
+                    return cnt;
+                }
+                else
+                {
+                    //concatenate the string to itself
+                    a += temp;
+                    cnt += 1;
+                }
+            }
+            return -1;
+        }
+
+        #endregion
     }
 }

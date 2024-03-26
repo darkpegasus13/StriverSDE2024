@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static StriverSDE.Heap;
 
 namespace StriverSDE
 {
@@ -56,12 +57,30 @@ namespace StriverSDE
 
             #region Trie
 
-            Trie t = new Trie();
-            var ans=t.PowerSet("abc"); 
-            foreach(var i in ans)
-            {
-                Console.WriteLine(i);
-            }
+            //Trie t = new Trie();
+            //var ans=t.PowerSet("abc"); 
+            //foreach(var i in ans)
+            //{
+            //    Console.WriteLine(i);
+            //}
+            #endregion
+
+            #region String
+            //Strings s = new Strings();
+            //s.LongestPalindromeSubstring("babad");
+            #endregion
+
+            #region Heap
+            //Heap hp = new Heap();
+            //hp.FindKthLargestOptimal(new int[] { 3, 2, 1, 5, 6, 4 }, 2);
+            MedianFinder mf = new MedianFinder();
+            
+            mf.AddNum(-1);
+            var a = mf.FindMedian();
+            mf.AddNum(-2);
+            var b = mf.FindMedian();
+            mf.AddNum(-3);
+            var c = mf.FindMedian();
             #endregion
             Console.ReadLine();
         }

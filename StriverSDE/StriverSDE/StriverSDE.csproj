@@ -49,6 +49,7 @@
     <Compile Include="BinarySearchTree.cs" />
     <Compile Include="BitManipulation.cs" />
     <Compile Include="Greedy.cs" />
+    <Compile Include="Heap.cs" />
     <Compile Include="LinkedList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
