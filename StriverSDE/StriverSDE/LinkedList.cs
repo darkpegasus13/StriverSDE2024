@@ -421,6 +421,177 @@ namespace StriverSDE
         }
         #endregion
 
-        
+        #region find intersection of two points
+
+        //Naive Solution S=>O(1) and T=>O(M*N)
+        //traverse through one LL and check whether it is equal to 
+        //the node of other for every node
+
+        //Better Solution S=>O(N) and T=>O(M+N)
+        //store the nodes in a hash map and if already present 
+        //return that node
+
+
+        //Optimal Solution S=>O(1) and T=>O(2(N+M))
+        //subtract the length of LLs and move then
+        //from longer LL after traversing the difference in length
+        public LinkedList FindIntersection(LinkedList headA, LinkedList headB)
+        {
+            if (headA == null || headB == null)
+                return null;
+            var a = headA;
+            var b = headB;
+            var aLen = 0;
+            var bLen = 0;
+            //calculating Length of LL
+            while (a != null)
+            {
+                a = a.next;
+                aLen++;
+            }
+            //calculating Length of LL
+            while (b != null)
+            {
+                b = b.next;
+                bLen++;
+            }
+            a = headA;
+            b = headB;
+            //calculating difference of LL
+            var diff = Math.Abs(aLen - bLen);
+            //traversing till difference in the longer LL
+            if (aLen >= bLen)
+            {
+                for (int i = 0; i < diff; i++)
+                    a = a.next;
+            }
+            else
+            {
+                for (int i = 0; i < diff; i++)
+                    b = b.next;
+            }
+            //starting both LL and seeing a junction
+            while (a != b)
+            {
+                a = a.next;
+                b = b.next;
+                //if one of the LL is ended it means
+                //there is no junction
+                if (a == null || b == null)
+                    return null;
+            }
+            return a;
+        }
+
+        #endregion
+
+        #region Detect a cycle in LL
+
+        //Naive Solution S=>O(N) and T=>O(N)
+        //store nodes in a hash map and return node if already found
+        public bool DetectCycle(LinkedList head)
+        {
+            if (head == null)
+                return false;
+            var curr = head;
+            Dictionary<LinkedList, int> d = new Dictionary<LinkedList, int>();
+            while (curr != null)
+            {
+                if (d.ContainsKey(curr))
+                    return true;
+                else
+                    d.Add(curr, 1);
+                curr = curr.next;
+            }
+            return false;
+        }
+
+        //Optimal Solution
+        //using rabbit and hare method
+
+        public bool DetectCycleOptimal(LinkedList head)
+        {
+            if (head == null)
+                return false;
+            var slow = head;
+            var fast = head;
+            while (fast.next != null && fast.next.next != null)
+            {
+                slow = slow.next;
+                fast = fast.next.next;
+                if (fast == slow)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        #endregion
+
+        #region Check a Linked List is palindrome
+
+        //Naive Solution S=>O(N) and T=>O(N)
+        //put all the element in a stack and then pop out
+        //elements by again traversing the LL as stack will store in reverse order
+        //if it comes out to be empty it is a palindrome
+        public bool IsPalindrome(LinkedList head)
+        {
+            if (head == null || head.next == null)
+                return true;
+            Stack<int> st = new Stack<int>();
+            var curr = head;
+            while (curr != null)
+            {
+                st.Push(curr.data);
+                curr = curr.next;
+            }
+            curr = head;
+            while (curr != null)
+            {
+                if (st.Peek() == curr.data)
+                    st.Pop();
+                else
+                    return false;
+                curr = curr.next;
+            }
+            return st.Count == 0 ? true : false;
+        }
+
+        //Optimal Solution
+        //if even number break in two halves and reverse the other half
+        //and then start traversing both the halves to get check palindrome
+
+        public bool IsPalindromeOptimal(LinkedList head)
+        {
+            //single or no element 
+            if (head == null || head.next == null)
+                return true;
+            var i = head;
+            var j = head;
+            //traversing to middle of LL
+            while (j.next != null && j.next.next != null)
+            {
+                i = i.next;
+                j = j.next.next;
+            }
+            //reversed the second half
+            i.next = ReverseLLOptimalIter(i.next);
+            i = i.next;
+            //will now compare the first half from head
+            //and the second half from i
+            LinkedList dummy = head;
+
+            while (i != null)
+            {
+                if (dummy.data != i.data)
+                    return false;
+                dummy = dummy.next;
+                i = i.next;
+            }
+            //if all nodes match send true
+            return true;
+        }
+
+        #endregion
     }
 }

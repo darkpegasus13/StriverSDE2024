@@ -18,10 +18,11 @@ namespace StriverSDE
             #endregion
 
             #region LL
-            //LinkedList ll = new LinkedList(0);
+            LinkedList ll = new LinkedList(0);
             //ll.next = new LinkedList(1);
             //ll.next.next = new LinkedList(2);
             //ll.RotateByK(ll,4);
+            ll.IsPalindrome();
             #endregion
 
             #region greedy
@@ -73,14 +74,20 @@ namespace StriverSDE
             #region Heap
             //Heap hp = new Heap();
             //hp.FindKthLargestOptimal(new int[] { 3, 2, 1, 5, 6, 4 }, 2);
-            MedianFinder mf = new MedianFinder();
+            // MedianFinder mf = new MedianFinder();
             
-            mf.AddNum(-1);
-            var a = mf.FindMedian();
-            mf.AddNum(-2);
-            var b = mf.FindMedian();
-            mf.AddNum(-3);
-            var c = mf.FindMedian();
+            // mf.AddNum(-1);
+            // var a = mf.FindMedian();
+            // mf.AddNum(-2);
+            // var b = mf.FindMedian();
+            // mf.AddNum(-3);
+            // var c = mf.FindMedian();
+            #endregion
+
+            #region DP
+            //DynamicProgramming dp = new DynamicProgramming();
+            //dp.knapSackDP(4,new int[]{1,2,3},new int[]{4,5,1},3);
+            //dp.maxSumIS(new int[] { 1, 101, 2, 3, 100 },5);
             #endregion
             Console.ReadLine();
         }
