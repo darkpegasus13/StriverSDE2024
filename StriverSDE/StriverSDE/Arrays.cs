@@ -523,4 +523,79 @@ public class ArrayComp
         return mxcont;
     }
     #endregion
+
+    #region 2 Sum
+
+    //Naive Approach S=>O(1) and T=>O(N^2)
+    //run two loops and check
+
+    //Better S=>O(1)if we only need to prnit yes or no else O(N) not good in this case and T=>O(NLogN) +O(N)
+    //sort the array and then use concept of two pointers
+    public int[] TwoSum(int[] nums, int target)
+    {
+        Dictionary<int, int> temp = new Dictionary<int, int>();
+        for (int i = 0; i < nums.Length; i++)
+        {
+            temp[nums[i]] = i;
+        }
+        Array.Sort(nums);
+        int p1 = 0;
+        int p2 = nums.Length - 1;
+        while (p1 < p2)
+        {
+            if (nums[p1] + nums[p2] < target)
+                p1++;
+            else if (nums[p1] + nums[p2] > target)
+                p2--;
+            else
+                return new int[] { temp[nums[p1]], temp[nums[p2]] };
+        }
+        return new int[2];
+    }
+
+    //Optimal solution S=>O(N) and T+>O(N)
+    //store the difference in hashmap and then if the
+    //number is present in hashmap return the solution
+
+    #endregion
+
+    #region Longest Consecutive Sequence
+    //Naive SOlution S=>O(1) and T=>O(N^2)
+    //using two loops and check for the number plus 1
+
+    //Naive solution S=>O(1) and T=>O(NLogn+N)
+    //sort it and then using a while loop calculate
+
+    //Optimal Solution S=>O(N) and T=>O(N)
+    //store it in a map and then if prev is present of the current skip
+    //otherwise you check for curr+1 until not found
+
+    public int LongestConsecutive(int[] nums)
+    {
+        if (nums.Length == 0)
+            return 0;
+        Dictionary<int, int> map = new Dictionary<int, int>();
+        foreach (int i in nums)
+        {
+            map[i] = 1;
+        };
+        int longest = 1;
+        foreach (KeyValuePair<int, int> kp in map)
+        {
+            if (!map.ContainsKey(kp.Key - 1))
+            {
+                int curr_longest = 1;
+                int curr_value = kp.Key + 1;
+                while (map.ContainsKey(curr_value))
+                {
+                    curr_longest++;
+                    curr_value += 1;
+                }
+                longest = Math.Max(longest, curr_longest);
+            }
+        }
+        return longest;
+    }
+
+    #endregion
 }

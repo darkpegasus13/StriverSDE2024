@@ -12,17 +12,17 @@ namespace StriverSDE
         static void Main(string[] args)
         {
             #region Array
-            //Console.WriteLine("df");
-            //ArrayComp arr = new ArrayComp();
+            ArrayComp arr = new ArrayComp();
             //arr.MaxSubArrayPrintRange(new int [] { 1, 2, 3, -2, 5 });
+            arr.LongestConsecutive(new int[]{0, 3, 7, 2, 5, 8, 4, 6, 0, 1});
             #endregion
 
             #region LL
-            LinkedList ll = new LinkedList(0);
+            //LinkedList ll = new LinkedList(0);
             //ll.next = new LinkedList(1);
             //ll.next.next = new LinkedList(2);
             //ll.RotateByK(ll,4);
-            ll.IsPalindrome();
+            //ll.IsPalindrome();
             #endregion
 
             #region greedy
@@ -75,7 +75,7 @@ namespace StriverSDE
             //Heap hp = new Heap();
             //hp.FindKthLargestOptimal(new int[] { 3, 2, 1, 5, 6, 4 }, 2);
             // MedianFinder mf = new MedianFinder();
-            
+
             // mf.AddNum(-1);
             // var a = mf.FindMedian();
             // mf.AddNum(-2);
