@@ -207,7 +207,7 @@ namespace StriverSDE
         {
             int fact = 1;
             List<int> integrs = new List<int>();
-            for(int i = 1; i < n; i++)
+            for (int i = 1; i < n; i++)
             {
                 fact = fact * i;
                 integrs.Add(i);
@@ -217,8 +217,8 @@ namespace StriverSDE
             StringBuilder ans = new StringBuilder();
             while (true)
             {
-                ans.Append(integrs[k/fact]);
-                integrs.RemoveAt(k/fact);
+                ans.Append(integrs[k / fact]);
+                integrs.RemoveAt(k / fact);
                 if (integrs.Count == 0)
                     break;
                 k = k % fact;
@@ -226,6 +226,88 @@ namespace StriverSDE
             }
             return ans.ToString();
         }
+        #endregion
+
+        #region Find all permutation
+
+        //Naive Solution S=>O(N)+O(N) and T=>O(N!XN)
+        //using recursion and a map for storing the values already visited
+
+        public IList<IList<int>> Permute(int[] nums)
+        {
+            var ans = new List<IList<int>>();
+            bool[] freq = new bool[nums.Length];
+            PermuteHelper(nums,new List<int>(),ans,freq,nums.Length);
+            return ans;
+        }
+
+        public void PermuteHelper(int[] nums,List<int> curr,List<IList<int>> ans, bool[] freq,int n)
+        {
+            if (curr.Count == n)
+            {
+                var temp = new int[n];
+                curr.CopyTo(temp);
+                ans.Add(temp);
+                return;
+            }
+            for(int i = 0; i < n; i++)
+            {
+                if (!freq[i])
+                {
+                    freq[i] = true;
+                    curr.Add(nums[i]);
+                    PermuteHelper(nums, curr, ans, freq, n);
+                    curr.RemoveAt(curr.Count - 1);
+                    freq[i] = false;
+                }
+            }
+        }
+        //Optimal Solution S=>O(N) and T=>O(N!XN)
+        //using backtracking and swap method
+        static void swap(int[] nums, int l, int i)
+        {
+            int temp = nums[l];
+            nums[l] = nums[i];
+            nums[i] = temp;
+        }
+
+        // Function to find the possible permutations 
+        static void PermuteHelperOptimal(List<int[]> res, int[] nums, int l, int h)
+        {
+            // Base case: Add the array to result and return 
+            if (l == h)
+            {
+                res.Add((int[])nums.Clone());
+                return;
+            }
+
+            // Permutations made 
+            for (int i = l; i <= h; i++)
+            {
+                // Swapping 
+                swap(nums, l, i);
+
+                // Calling permutations for next greater value of l 
+                PermuteHelperOptimal(res, nums, l + 1, h);
+
+                // Backtracking 
+                swap(nums, l, i);
+            }
+        }
+
+        //Note
+        //void Method1(Dictionary<string, string> dict) {
+        //        dict["a"] = "b";
+        //    dict = new Dictionary<string, string>();
+        //}
+
+        //    void Method2(ref Dictionary<string, string> dict)
+        //    {
+        //        dict["e"] = "f";
+        //        dict = new Dictionary<string, string>();
+        //    }
+        //in second one the dicionary would be replaced
+
         #endregion
     }
 }

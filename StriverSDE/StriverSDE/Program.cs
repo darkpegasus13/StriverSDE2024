@@ -14,7 +14,7 @@ namespace StriverSDE
             #region Array
             ArrayComp arr = new ArrayComp();
             //arr.MaxSubArrayPrintRange(new int [] { 1, 2, 3, -2, 5 });
-            arr.LongestConsecutive(new int[]{0, 3, 7, 2, 5, 8, 4, 6, 0, 1});
+            arr.SubarraySum(new int[]{ 9,-3,3,-1,6,-5},0);
             #endregion
 
             #region LL
@@ -43,7 +43,8 @@ namespace StriverSDE
 
             #region Recursion
 
-            //Recursion recur = new Recursion();
+            Recursion recur = new Recursion();
+            recur.Permute(new int[]{ 1,2,3});
             //var res = recur.SubsetsWithDup(new int[] {1,2,2});
             //foreach(var i in res)
             //{

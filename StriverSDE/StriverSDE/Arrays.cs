@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ArrayComp
 {
@@ -595,6 +596,120 @@ public class ArrayComp
             }
         }
         return longest;
+    }
+    #endregion
+
+    #region Merge Overlapping sub intervals
+
+    //Naive Solution S=>O(N) and T=>O(NLogN)+O(2N)
+    //sort it then using two loops check for every element
+    public int[][] Merge(int[][] intervals)
+    {
+        int n = intervals.Length;
+        //using Linq we are sorting
+        List<int[]> ls = new List<int[]>();
+        intervals = intervals.OrderBy(inner => inner[0]).ToArray();
+        int i = 0;
+        while (i < n)
+        {
+            for(int j = i; j < n; j++)
+            {
+                while (i<n && j<n && intervals[j][0] <= intervals[i][1])
+                {
+                    intervals[i][1] = Math.Max(intervals[j][1],intervals[i][1]);
+                    j++;
+                }
+                ls.Add(new int[] {intervals[i][0],intervals[i][1] });
+                i = j==i?i:j;
+            }
+        }
+        return ls.ToArray();
+    }
+
+    //Optimal Solution S=>O(N) and T=>O(NLogN)+O(N)
+    //using one loop only by comparing with ans array
+
+    public int[][] MergeOptimal(int[][] intervals) {
+        if (intervals.Length == 0 || intervals.Length== 1)
+            return intervals;
+        List<int[]> mergedintervals = new List<int[]>(); 
+        intervals = intervals.OrderBy(inner => inner[0]).ToArray();
+        foreach(int[] interv in intervals)
+        {
+            if (mergedintervals.Count == 0 || interv[0] > mergedintervals.Last()[1])
+                mergedintervals.Add(interv);
+            else
+                mergedintervals.Last()[1] = Math.Max(mergedintervals.Last()[1], interv[1]);
+        }
+        return mergedintervals.ToArray();
+            }
+    #endregion
+
+    #region Length of longest Subarray with zero/k sum
+
+    //Naive Solution S=>O(1) and T=>O(N^2)
+    //using two loops
+
+    //Optimal Solution S=>O(N) and T=>O(N)
+    //using prefix sum
+
+    public int SubarraySum(int[] nums, int k=0)
+    {
+        int sum = 0;
+        int longest = 0;
+        //the key is sum till i index and value is the index 
+        Dictionary<int, int> dict = new Dictionary<int, int>() { { 0, -1 } };
+        for(int curr=0;curr<nums.Length;curr++)
+        {
+            sum += nums[curr];
+            if (dict.ContainsKey(sum - k))
+            {
+                longest = Math.Max(longest,dict[sum-k]==-1?1:curr - dict[sum - k]);
+            }
+            if (!dict.ContainsKey(sum))
+                dict.Add(sum, curr);
+            //we are storing the first index only once that has the sum as we need the longest
+            //length
+            //for printing the number of subarray with given sum just replace
+            //the index in dictionary with counts
+        }
+        return longest;
+    }
+
+    #endregion
+
+    #region Longest Substring with unique characters
+
+    //Naive Solution S=>O(N) and T=>O(N^2)
+    //use two loops and check for every substring and a hash
+
+    //Better Solution S=>O(N) and T=>O(2N) as left and right pointer both will travel the 
+    //elements once.
+    //using the left and right pointer and a hash
+
+    //Optimal Solution S=>O(N) and T=>O(N)
+    //using the left and right pointer and a hash and also storing their indexes in the hash
+    //so we can jump left ptr directly to the index
+
+    public int LengthOfLongestSubstring(string s)
+    {
+        Dictionary<char, int> d = new Dictionary<char, int>();
+        int left = 0;
+        int len = 0;
+        int right = 0;
+        while (right < s.Length)
+        {
+            if (d.ContainsKey(s[right]))
+                //because sometimes the d[s[right]] + 1 can be not b/w l and r
+                left = Math.Max(left, d[s[right]] + 1);
+            if (d.ContainsKey(s[right]))
+                d[s[right]] = right;
+            else
+                d.Add(s[right], right);
+            len = Math.Max(len, right - left + 1);
+            right += 1;
+        }
+        return len;
     }
 
     #endregion
