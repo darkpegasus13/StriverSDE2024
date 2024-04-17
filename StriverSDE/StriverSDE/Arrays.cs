@@ -713,4 +713,37 @@ public class ArrayComp
     }
 
     #endregion
+
+    #region Search in a 2D matrix
+
+    //Naive Solution S=>O(1) and T=>O(N*M)
+    //search in entire matrix using two loops
+
+    //Better Solution S=>O(1) and T=>O(n+LogM)
+    //using binary search on all rows
+
+    //Better Solution 2 S=>O(M*N) and T=>O(Log(M*N))
+    //we can flatten the list by converting to 1D array 
+    //and apply binary search
+
+    //Best Solution S=>(1) and T=>O(Log(M*N))
+    //using the pointer point to 1 row and last column
+    public bool SearchMatrix(int[][] matrix, int target)
+    {
+        int i = 0;
+        int j = matrix[0].Length - 1;
+        while (i < matrix.Length && j >= 0)
+        {
+            int strt = matrix[i][j];
+            if (strt < target)
+                i += 1;
+            else if (strt > target)
+                j -= 1;
+            else
+                return true;
+        }
+        return false;
+    }
+
+    #endregion
 }
