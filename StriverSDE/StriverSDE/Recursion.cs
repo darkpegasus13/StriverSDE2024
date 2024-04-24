@@ -309,5 +309,68 @@ namespace StriverSDE
         //in second one the dicionary would be replaced
 
         #endregion
+
+        #region Word Break 2 print all ways
+        //please look afterwards long and important topic
+
+
+        //Optimal Solution S=>O(N) and T=>O()
+        //
+
+        public List<string> WordBreak(List<string> dictionary, string s)
+        {
+            var ansList = new List<string>();
+            WordBreakHelper(dictionary, dictionary.Count, ansList, s);
+            return ansList;
+        }
+        public void WordBreakHelper(List<string> dictionary, int n, List<string> ansList,
+            string s,int indx=0,string currS="")
+        {
+            if (indx >= n)
+                return;
+            if (currS == s)
+                ansList.Add(currS);
+            WordBreakHelper(dictionary,n,ansList,s,indx+1,currS+dictionary[indx]);
+            WordBreakHelper(dictionary, n, ansList, s, indx + 1, currS);
+        }
+
+        #endregion
+
+        #region Grid Unique paths
+
+        //Naive SOlution
+        //using recursion
+        public int UniquePaths(int m, int n)
+        {
+            return UniquePathsHelper(m, n, new Tuple<int, int>(0, 0),
+        new Tuple<int, int>(m - 1, n - 1));
+        }
+        public int UniquePathsHelper(int m, int n,Tuple<int,int> curr,Tuple<int,int> target,int ans=0)
+        {
+            if (curr.Item1 >= m || curr.Item2 >= n)
+                return 0;
+            if (curr.Equals(target))
+                return 1;
+            return UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1 + 1, curr.Item2), target, ans)
+                + UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1, curr.Item2 + 1), target, ans);
+        }
+
+        //Better Solution
+        //using DP memoization
+
+        public int UniquePathsHelper(int m, int n, Tuple<int, int> curr, Tuple<int, int> target, int[][] matrix, int ans = 0
+           )
+        {
+            if (curr.Item1 >= m || curr.Item2 >= n)
+                return 0;
+            if (curr.Equals(target))
+                return 1;
+            if (matrix[curr.Item1][curr.Item2] != -1)
+                return matrix[curr.Item1][curr.Item2];
+            else
+                return matrix[curr.Item1][curr.Item2] = UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1 + 1, curr.Item2), target, matrix, ans)
+                + UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1, curr.Item2 + 1), target, matrix, ans);
+        }
+        #endregion 
     }
 }

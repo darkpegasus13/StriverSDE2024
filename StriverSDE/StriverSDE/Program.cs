@@ -14,7 +14,9 @@ namespace StriverSDE
             #region Array
             ArrayComp arr = new ArrayComp();
             //arr.MaxSubArrayPrintRange(new int [] { 1, 2, 3, -2, 5 });
-            arr.SubarraySum(new int[]{ 9,-3,3,-1,6,-5},0);
+            //arr.SubarraySum(new int[]{ 9,-3,3,-1,6,-5},0);
+            //arr.Merge(new int[] { 5,6,4,0,0,0},3,new int[] {3,2,4 },3);
+            arr.MergeSort(new int[] { 1, 3, 2, 3, 1 }, 0, 5);
             #endregion
 
             #region LL
@@ -43,8 +45,13 @@ namespace StriverSDE
 
             #region Recursion
 
-            Recursion recur = new Recursion();
-            recur.Permute(new int[]{ 1,2,3});
+            //Recursion recur = new Recursion();
+            //recur.Permute(new int[]{ 1,2,3});
+            //foreach(string s in recur.WordBreak(new List<string>() {"god","is","now","no","where","here" },
+            //    "godisnowherenowhere"))
+            //{
+            //    Console.WriteLine(s);
+            //}
             //var res = recur.SubsetsWithDup(new int[] {1,2,2});
             //foreach(var i in res)
             //{
@@ -89,6 +96,17 @@ namespace StriverSDE
             //DynamicProgramming dp = new DynamicProgramming();
             //dp.knapSackDP(4,new int[]{1,2,3},new int[]{4,5,1},3);
             //dp.maxSumIS(new int[] { 1, 101, 2, 3, 100 },5);
+            #endregion
+
+            #region Binary Tree
+
+            //KthLargest k = new KthLargest(3, new int[] { 4, 5, 8, 2 });
+            //var n = new int[] {3, 5, 10, 9, 4};
+            //foreach(int i in n)
+            //{
+            //    Console.WriteLine(k.Add(i));
+            //}
+
             #endregion
             Console.ReadLine();
         }

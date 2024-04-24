@@ -612,15 +612,15 @@ public class ArrayComp
         int i = 0;
         while (i < n)
         {
-            for(int j = i; j < n; j++)
+            for (int j = i; j < n; j++)
             {
-                while (i<n && j<n && intervals[j][0] <= intervals[i][1])
+                while (i < n && j < n && intervals[j][0] <= intervals[i][1])
                 {
-                    intervals[i][1] = Math.Max(intervals[j][1],intervals[i][1]);
+                    intervals[i][1] = Math.Max(intervals[j][1], intervals[i][1]);
                     j++;
                 }
-                ls.Add(new int[] {intervals[i][0],intervals[i][1] });
-                i = j==i?i:j;
+                ls.Add(new int[] { intervals[i][0], intervals[i][1] });
+                i = j == i ? i : j;
             }
         }
         return ls.ToArray();
@@ -629,12 +629,13 @@ public class ArrayComp
     //Optimal Solution S=>O(N) and T=>O(NLogN)+O(N)
     //using one loop only by comparing with ans array
 
-    public int[][] MergeOptimal(int[][] intervals) {
-        if (intervals.Length == 0 || intervals.Length== 1)
+    public int[][] MergeOptimal(int[][] intervals)
+    {
+        if (intervals.Length == 0 || intervals.Length == 1)
             return intervals;
-        List<int[]> mergedintervals = new List<int[]>(); 
+        List<int[]> mergedintervals = new List<int[]>();
         intervals = intervals.OrderBy(inner => inner[0]).ToArray();
-        foreach(int[] interv in intervals)
+        foreach (int[] interv in intervals)
         {
             if (mergedintervals.Count == 0 || interv[0] > mergedintervals.Last()[1])
                 mergedintervals.Add(interv);
@@ -642,7 +643,7 @@ public class ArrayComp
                 mergedintervals.Last()[1] = Math.Max(mergedintervals.Last()[1], interv[1]);
         }
         return mergedintervals.ToArray();
-            }
+    }
     #endregion
 
     #region Length of longest Subarray with zero/k sum
@@ -653,18 +654,18 @@ public class ArrayComp
     //Optimal Solution S=>O(N) and T=>O(N)
     //using prefix sum
 
-    public int SubarraySum(int[] nums, int k=0)
+    public int SubarraySum(int[] nums, int k = 0)
     {
         int sum = 0;
         int longest = 0;
         //the key is sum till i index and value is the index 
         Dictionary<int, int> dict = new Dictionary<int, int>() { { 0, -1 } };
-        for(int curr=0;curr<nums.Length;curr++)
+        for (int curr = 0; curr < nums.Length; curr++)
         {
             sum += nums[curr];
             if (dict.ContainsKey(sum - k))
             {
-                longest = Math.Max(longest,dict[sum-k]==-1?1:curr - dict[sum - k]);
+                longest = Math.Max(longest, dict[sum - k] == -1 ? 1 : curr - dict[sum - k]);
             }
             if (!dict.ContainsKey(sum))
                 dict.Add(sum, curr);
@@ -745,5 +746,288 @@ public class ArrayComp
         return false;
     }
 
+    #endregion
+
+    #region Merge Two Sorted Arrays 
+
+    //Naive SOlution S=>O(N+M) and T=>O(N+M)
+    //using a third array
+
+    //Better Solution S=>O(1) and T=>O(min(N,M))+O(NLOgN+MLOgN)
+    //put all smaller elements in arr1 and bigger in arr2 then sort individiually
+    public void Merge(int[] nums1, int m, int[] nums2, int n)
+    {
+        int left = m - 1;
+        int right = 0;
+        while (right < n && left >= 0)
+        {
+            if (nums2[right] > nums1[left])
+            {
+                int temp = nums1[left];
+                nums1[left] = nums2[right];
+                nums2[right] = temp;
+                left--;
+                right++;
+            }
+            else
+                break; //the elements are already correct
+        }
+        //we will sort now individually as nums1 contains all smaller elements
+        //than nums2
+
+        Array.Sort(nums2);
+        Array.Sort(nums1);
+    }
+
+
+    //Optimal Solution S=>O(1) and T=>O(N+M+Log(N+M))
+    //using gap method
+
+    static int NextGap(int gap)
+    {
+        if (gap <= 1)
+            return 0;
+        //another method for getting the ceil withount ceiling function
+        //as math.ceiling returns decimal
+        return (gap / 2) + (gap % 2);
+    }
+
+    private static void MergeOptimal(int[] arr1, int[] arr2, int n,
+                              int m)
+    {
+        int i, j, gap = n + m;
+        for (gap = NextGap(gap); gap > 0; gap = NextGap(gap))
+        {
+            // comparing elements in the first 
+            // array. 
+            for (i = 0; i + gap < n; i++)
+                if (arr1[i] > arr1[i + gap])
+                {
+                    int temp = arr1[i];
+                    arr1[i] = arr1[i + gap];
+                    arr1[i + gap] = temp;
+                }
+
+            // comparing elements in both arrays. 
+            for (j = gap > n ? gap - n : 0; i < n && j < m;
+                 i++, j++)
+                if (arr1[i] > arr2[j])
+                {
+                    int temp = arr1[i];
+                    arr1[i] = arr2[j];
+                    arr2[j] = temp;
+                }
+
+            if (j < m)
+            {
+                // comparing elements in the 
+                // second array. 
+                for (j = 0; j + gap < m; j++)
+                    if (arr2[j] > arr2[j + gap])
+                    {
+                        int temp = arr2[j];
+                        arr2[j] = arr2[j + gap];
+                        arr2[j + gap] = temp;
+                    }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Majority Elements n/2
+
+    //Naive SOlution S=>O(1) and T=>O(N^2)
+    //using two loops and comparing 
+
+    //Better Solution S=>O(N) and T=>O(N)
+    //using a map and maintaining the count
+
+    //Optimal Solution S=>O(1) and T=>O(N)
+    //using Moores voting algo
+
+    public int MajorityElement(int[] nums)
+    {
+        int candidate = 0;
+        int occurence = 0;
+        for (int i = 0; i < nums.Length; i++)
+        {
+            if (occurence == 0)
+            {
+                candidate = nums[i];
+            }
+            if (candidate == nums[i])
+            {
+                occurence += 1;
+            }
+            else
+            {
+                occurence -= 1;
+            }
+        }
+        //need this code only when there may be
+        //case when majority does not exist
+        //return occurence > nums.Length / 2 ? candidate : -1;
+        return candidate;
+    }
+    #endregion
+
+    #region Majority element n/3
+    //at maximimum 2 integer can be the ans
+    //take floor of len/3 and the integer having count > than this are ans also break the loop
+    //as soon as your array has 2 integers
+
+    //Naive Solution S=>O(1) and T=>O(N^2)
+    //using two loops and comparing 
+
+    //Better Solution S=>O(N) and T=>O(N)
+    //using a map and maintaining the count
+
+    //Optimal Solution S=>O(1) and T=>O(2N)
+    //using Moores voting algo
+
+    public List<int> MajorityElementn3(int[] nums)
+    {
+        int candidate1 = int.MinValue, candidate2 = int.MinValue;
+        int occurence1 = 0, occurence2 = 0;
+        for (int i = 0; i < nums.Length; i++)
+        {
+            if (occurence1 == 0 && nums[i] != candidate2)
+            {
+                candidate1 = nums[i];
+                occurence1 = 1;
+            }
+            else if (occurence2 == 0 && nums[i] != candidate1)
+            {
+                candidate2 = nums[i];
+                occurence2 = 1;
+            }
+            else if (candidate1 == nums[i])
+            {
+                occurence1 += 1;
+            }
+            else if (candidate2 == nums[i])
+            {
+                occurence2 += 1;
+            }
+            else
+            {
+                occurence2--;
+                occurence1--;
+            }
+        }
+        //we are not sure whether the ans is definitelt these two
+        //so we check in the below step
+        List<int> ans = new List<int>();
+        int cnt1 = 0, cnt2 = 0;
+        for (int i = 0; i < nums.Length; i++)
+        {
+            if (nums[i] == candidate1) cnt1++;
+            if (nums[i] == candidate2) cnt2++;
+        }
+        var mini = (nums.Length / 3) + 1;
+        if (cnt1 >= mini) ans.Add(candidate1);
+        if (cnt2 >= mini) ans.Add(candidate2);
+        return ans;
+    }
+
+    #endregion
+
+    #region Reverse Pairs
+
+    //Naive Solution S=>O(1) and T => O(N ^ 2)
+    //using two loops and then checking the condition
+
+        static void Merge(int[] arr, int low, int mid, int high)
+        {
+            // Calculate the lengths of the two subarrays
+            int len1 = mid - low + 1;
+            int len2 = high - mid;
+
+            // Create temporary arrays to hold the subarrays
+            int[] first = new int[len1];
+            int[] second = new int[len2];
+
+            // Copy data from the main array to the temporary arrays
+            int k = low;
+            for (int a = 0; a < len1; a++)
+            {
+                first[a] = arr[k++];
+            }
+
+            k = mid + 1;
+            for (int a = 0; a < len2; a++)
+            {
+                second[a] = arr[k++];
+            }
+
+        // Merge the two subarrays back into the main array
+        int i = 0;
+            int j = 0;
+            k = low;
+            while (i < len1 && j < len2)
+            {
+                // Compare and merge elements in sorted order
+                if (first[i] <= second[j])
+                {
+                    arr[k++] = first[i++];
+                }
+                else
+                {
+                    arr[k++] = second[j++];
+                }
+            }
+
+            // Copy any remaining elements from the temporary arrays
+            while (i < len1)
+            {
+                arr[k++] = first[i++];
+            }
+
+            while (j < len2)
+            {
+                arr[k++] = second[j++];
+            }
+        }
+
+        // Function to count the reverse pairs using merge sort
+        static int CountReversePairs(int[] arr, int low, int mid, int high)
+        {
+            int cnt = 0;
+            int j = mid + 1;
+            for (int i = low; i <= mid; i++)
+            {
+                while (i <= high && j<=high && arr[i] > 2 * arr[j])
+                {
+                    j++;
+                }
+                cnt += (j - (mid + 1));
+            }
+            return cnt;
+        }
+
+        // Merge Sort function to sort the array and count reverse pairs
+        public int MergeSort(int[] arr, int low, int high)
+        {
+            int cnt = 0;
+            if (low >= high)
+            {
+                return cnt;
+            }
+            int mid = low + (high - low) / 2;
+
+            // Recursively count reverse pairs in left and right halves
+            cnt += MergeSort(arr, low, mid);
+            cnt += MergeSort(arr, mid + 1, high);
+
+            // Merge the sorted halves and count reverse pairs
+            cnt += CountReversePairs(arr, low, mid, high);
+
+            // Merge the two halves
+            Merge(arr, low, mid, high);
+
+            return cnt;
+        }
+    
     #endregion
 }

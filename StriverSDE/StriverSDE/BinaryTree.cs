@@ -642,5 +642,52 @@ namespace StriverSDE
         }
 
         #endregion
+
+        #region Symmetric Binary Tree
+
+        //Optimal solution S=>O(N) and T=>O(N)
+        //preorder traversal with one left and reverse preorder with the other tree
+        public bool IsSymmetric(TreeNode root)
+        {
+            var right = root.right;
+            var left = root.left;
+            return IsSymmetricHelper(right, left);
+        }
+
+        public bool IsSymmetricHelper(TreeNode right, TreeNode left)
+        {
+            if (right == null && left == null)
+                return true;
+            if (right == null || left == null || right.val != left.val)
+                return false;
+            return IsSymmetricHelper(right.left, left.right) &&
+            IsSymmetricHelper(right.right, left.left);
+        }
+
+        #endregion
+
+        #region Convert Binary tree into its mirror
+
+
+        //Optimal Solution S=>O(H) and T=>O(N)
+        //using post order to swap left and right
+        public void Mirror(TreeNode root)
+        {
+            if (root == null)
+                return;
+            //remember to use post order only in this
+            //as the left and right are getting swapped
+            Mirror(root.left);
+            Mirror(root.right);
+            //swapping the left and the right
+            var temp = root.left;
+            root.left = root.right;
+            root.right = temp;
+        }
+
+        #endregion
+
+
     }
+    
 }

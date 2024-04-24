@@ -603,7 +603,7 @@ namespace StriverSDE
         //Optimal solution
         //turtoise and hare method
 
-        public LinkedList DetectCycle(LinkedList head)
+        public LinkedList DetectCycleStartingPoint(LinkedList head)
         {
             if (head == null || head.next == null)
                 return null;
