@@ -1028,6 +1028,189 @@ public class ArrayComp
 
             return cnt;
         }
-    
+
+    #endregion
+
+    #region repeat and missing number
+
+    //Naive Solution S=>O(1) and T=>O(N^2)
+    //run a loop to 1 to n both inclusive and see if it 
+    //repeat or missing
+
+    //Better Solution S=>O(N) and T=>O(2N)
+    //using hashing store number 0 to n from the array in a hash
+    //number with value 2 is repeat and if not present in map 
+    //it is missing
+
+    //Optimal Solution S=>O(1) and T=>O(N)
+    //using maths quadratic equations
+
+    int[] findTwoElement(int[] arr, int n)
+    {
+        long sn = (n * (n + 1)) / 2;
+        long s2n = ((n * (n + 1)) * (2 * n + 1)) / 6;
+
+        long S = 0, S2 = 0;
+        for(int i = 0; i < n; i++)
+        {
+            S += arr[i];
+            S2 += (long)arr[i] * (long)arr[i];
+        }
+
+        //S-Sn = X-Y
+        long val1 = S-sn;
+
+        //S2-S2n = X^2-Y^2
+        long val2 = S2-s2n;
+
+        //S2-S2n=(X-Y)(X+Y)
+        val2 = val2 / val1;
+
+        long x = (val1 + val2)/2;
+        long y = x - val1;
+
+        int[] ans = new int[] { (int)x, (int)y };
+        return ans; 
+
+    }
+
+    //Optimal Solution S=>O(1) and T=>O(N)
+    //using XOR we divide the numbers according to one bit where the bit was 1
+    //this will create two groups one for 0 and other for 1 the answer would be accuring odd number of times
+    //3 for repeating and 1 for missing
+    int[] findTwoElement2(int[] arr, int n)
+    {
+            /* Will hold xor of all elements
+            and numbers from 1 to n */
+            int xor1;
+
+            /* Will have only single set bit of xor1 */
+            int set_bit_no;
+
+            int i;
+            int x = 0,y = 0;
+
+            xor1 = arr[0];
+
+            /* Get the xor of all array elements */
+            for (i = 1; i < n; i++)
+                xor1 = xor1 ^ arr[i];
+
+            /* XOR the previous result with numbers from 
+            1 to n*/
+            for (i = 1; i <= n; i++)
+                xor1 = xor1 ^ i;
+
+            /* Get the rightmost set bit in set_bit_no */
+            set_bit_no = xor1 & ~(xor1 - 1);
+
+            /* Now divide elements in two sets by comparing
+            rightmost set bit of xor1 with bit at same 
+            position in each element. Also, get XORs of two
+            sets. The two XORs are the output elements.The 
+            following two for loops serve the purpose */
+            for (i = 0; i < n; i++)
+            {
+                if ((arr[i] & set_bit_no) != 0)
+
+                    /* arr[i] belongs to first set */
+                    x = x ^ arr[i];
+
+                else
+
+                    /* arr[i] belongs to second set*/
+                    y = y ^ arr[i];
+            }
+            for (i = 1; i <= n; i++)
+            {
+                if ((i & set_bit_no) != 0)
+
+                    /* i belongs to first set */
+                    x = x ^ i;
+
+                else
+
+                    /* i belongs to second set*/
+                    y = y ^ i;
+            }
+
+        /* *x and *y hold the desired output elements */
+        return new int[] { x, y };
+    }
+    #endregion
+
+    #region Count inversion
+
+    //Naive Solution S=>O(1) and T=>O(N^2)
+    //using two loops
+
+    //Optimal Solution S=>O(1) and T=>O(N+M)
+    //using the merge sort 
+
+    public long inversionCount(long[] arr, int N)
+    {
+        //Your Code Here
+        return MergeSort(arr, 0, N-1);
+    }
+    static long Merge(long[] arr, int low, int mid, int high)
+    {
+        List<long> temp = new List<long>();
+        // Calculate the lengths of the two subarrays
+        int left = low ;
+        int right = mid+1;
+
+        long cnt = 0;
+
+        while (left <= mid && right <= high)
+        {
+            if (arr[left] <= arr[right])
+            {
+                temp.Add(arr[left]);
+                left++;
+            }
+            else
+            {
+                temp.Add(arr[right]);
+                cnt += (mid - left + 1);
+                right++;
+            }
+        }
+        while (left <= mid)
+        {
+            temp.Add(arr[left]);
+            left++;
+        }
+        while (right <= high)
+        {
+            temp.Add(arr[right]);
+            right++;
+        }
+        for (int i = low; i <= high; i++)
+        {
+            arr[i] = temp[i - low];
+        }
+        return cnt;
+    }
+
+    // Merge Sort function to sort the array and count reverse pairs
+    public long MergeSort(long[] arr, int low, int high)
+    {
+        long cnt = 0;
+        if (low >= high)
+        {
+            return cnt;
+        }
+        int mid = low + (high - low) / 2;
+
+        // Recursively count reverse pairs in left and right halves
+        cnt += MergeSort(arr, low, mid);
+        cnt += MergeSort(arr, mid + 1, high);
+
+        // Merge the sorted halves and count reverse pairs
+        cnt += Merge(arr, low, mid, high);
+        return cnt;
+    }
+
+
     #endregion
 }
