@@ -1,6 +1,9 @@
+using StriverSDE;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
+using static StriverSDE.BinarySearchTree;
 
 public class ArrayComp
 {
@@ -1372,6 +1375,62 @@ return slow;
             }
         }
         return ans;
+    }
+
+    #endregion
+
+    #region flattening of linked list
+    public class NodeSpecial
+    {
+        public int data;
+        public NodeSpecial next;
+        public NodeSpecial bottom;
+        NodeSpecial(int x)
+        {
+            this.data = x;
+            this.next = null;
+            this.bottom = null;
+        }
+    }
+
+    //Optimal Solution S=>O(N for recursion) and T=>O(N)
+    //traversing to right and using mergesort logic
+
+        
+    public NodeSpecial MergeTwoList(NodeSpecial l1, NodeSpecial l2)
+    {
+        var temp = new NodeSpecial(-1);
+        var root = temp;
+
+        while (l1 != null && l2 != null)
+        {
+            if (l1.data >= l2.data)
+            {
+                temp.bottom = l2;
+                l2 = l2.bottom;
+            }
+            else
+            {
+                temp.bottom = l1;
+                l1 = l1.bottom;
+            }
+            temp = temp.bottom;
+        }
+        if (l1 != null)
+            temp.bottom = l1;
+        if (l2 != null)
+            temp.bottom = l2;
+        return root.bottom;
+    }
+
+    public NodeSpecial flatten(NodeSpecial head)
+    {
+        //your code here
+        if (head == null || head.next == null)
+            return head;
+        head.next = this.flatten(head.next);
+        head = this.MergeTwoList(head, head.next);
+        return head;
     }
 
     #endregion
