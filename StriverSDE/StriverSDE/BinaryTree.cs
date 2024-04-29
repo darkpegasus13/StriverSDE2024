@@ -319,5 +319,374 @@ namespace StriverSDE
         }
 
         #endregion
+
+        #region level order traversal
+
+        //Optimal Solution S=>O(N) and T=>O(N)
+        //using a queue
+
+        public IList<IList<int>> LevelOrder(TreeNode root)
+        {
+            var ansList = new List<IList<int>>();
+            if (root == null)
+                return ansList;
+            Queue<TreeNode> q = new Queue<TreeNode>();
+            q.Enqueue(root);
+            while (q.Count() != 0)
+            {
+                var tempList = new List<int>();
+                int c = q.Count();
+                for (int i = 0; i < c; i++)
+                {
+                    var temp = q.Dequeue();
+                    if (temp.left != null)
+                        q.Enqueue(temp.left);
+                    if (temp.right != null)
+                        q.Enqueue(temp.right);
+                    tempList.Add(temp.val);
+                }
+                ansList.Add(tempList);
+            }
+            return ansList;
+        }
+
+        #endregion
+
+        #region find the depth of the tree
+
+        //Optimal Approach S=>O(N) and T=>O(N)
+        //using the same approach as above
+
+        public int DepthOfTree(TreeNode root)
+        {
+            if (root == null)
+                return 0;
+            int cnt=0;
+            Queue<TreeNode> q = new Queue<TreeNode>();
+            q.Enqueue(root);
+            while (q.Count() != 0)
+            {
+                int c = q.Count();
+                for (int i = 0; i < c; i++)
+                {
+                    var temp = q.Dequeue();
+                    if (temp.left != null)
+                        q.Enqueue(temp.left);
+                    if (temp.right != null)
+                        q.Enqueue(temp.right);
+                }
+                cnt++;
+            }
+            return cnt;
+        }
+
+        //Optimal Solution 2
+        //using recursion
+        public int DepthOfTreeRecur(TreeNode root)
+        {
+            if (root == null)
+                return 0;
+            return 1
+                + Math.Max(DepthOfTreeRecur(root.left),
+                           DepthOfTreeRecur(root.right));
+        }
+        #endregion
+
+        #region Diameter of a Binary Tree
+        
+        //Naive Solution S=>O(N) and T=>O(N^2)
+        //canculating the depth of trees and calculating
+        public int diameterHelper(TreeNode root)
+        {
+            //Your code here
+            if (root == null)
+                return 0;
+
+            // get the height of left and right sub-trees
+            int lHeight = DepthOfTreeRecur(root.left);
+            int rHeight = DepthOfTreeRecur(root.right);
+
+            // get the diameter of left and right sub-trees
+            int lDiameter = diameterHelper(root.left);
+            int rDiameter = diameterHelper(root.right);
+
+            // Return max of following three
+            // 1) Diameter of left subtree
+            // 2) Diameter of right subtree
+            // 3) Height of left subtree + height of right
+            // subtree + 1
+            return Math.Max(lHeight + rHeight + 1,
+                            Math.Max(lDiameter, rDiameter));
+        }
+
+        //Optimal Approach T=>O(N) and S=>O(1)
+        //using calculating height in same step
+        //see implementation afterwards
+
+        #endregion
+
+        #region Zig Zag traversal
+
+        //Optimal Solution T=>O(N) and S=>O(N)
+        //exactly same as level order with a small
+        //change
+
+        public IList<IList<int>> ZigZag(TreeNode root)
+        {
+            var ansList = new List<IList<int>>();
+            if (root == null)
+                return ansList;
+            Queue<TreeNode> q = new Queue<TreeNode>();
+            q.Enqueue(root);
+            bool isOdd=false;
+            while (q.Count() != 0)
+            {
+                var tempList = new List<int>();
+                int c = q.Count();
+                for (int i = 0; i < c; i++)
+                {
+                    var temp = q.Dequeue();
+                        if (temp.left != null)
+                            q.Enqueue(temp.left);
+                        if (temp.right != null)
+                            q.Enqueue(temp.right);
+                    tempList.Add(temp.val);
+                }
+                if (isOdd)
+                    tempList.Reverse();
+                ansList.Add(tempList);
+                isOdd = !isOdd;
+            }
+            return ansList;
+        }
+
+        #endregion
+
+        #region Boundary traversal(anticlockwise)
+
+        //Optimal Solution S=>O(N) and T=>O(N)
+        //left boundary leaves node and right boundary
+
+        // A simple function to print leaf
+        // nodes of a binary tree
+        public virtual void printLeaves(TreeNode node)
+        {
+            if (node == null)
+                return;
+
+            printLeaves(node.left);
+
+            // Print it if it is a leaf node
+            if (node.left == null && node.right == null)
+            {
+                Console.Write(node.val + " ");
+            }
+            printLeaves(node.right);
+        }
+
+        // A function to print all left boundary
+        // nodes, except a leaf node. Print the
+        // nodes in TOP DOWN manner
+        public virtual void printBoundaryLeft(TreeNode node)
+        {
+            if (node == null)
+                return;
+
+            if (node.left != null)
+            {
+
+                // to ensure top down order, print the node
+                // before calling itself for left subtree
+                Console.Write(node.val + " ");
+                printBoundaryLeft(node.left);
+            }
+            else if (node.right != null)
+            {
+                Console.Write(node.val + " ");
+                printBoundaryLeft(node.right);
+            }
+
+            // do nothing if it is a leaf node,
+            // this way we avoid duplicates in output
+        }
+
+        // A function to print all right boundary
+        // nodes, except a leaf node. Print the
+        // nodes in BOTTOM UP manner
+        public virtual void printBoundaryRight(TreeNode node)
+        {
+            if (node == null)
+                return;
+
+            if (node.right != null)
+            {
+                // to ensure bottom up order,
+                // first call for right subtree,
+                // then print this node
+                printBoundaryRight(node.right);
+                Console.Write(node.val + " ");
+            }
+            else if (node.left != null)
+            {
+                printBoundaryRight(node.left);
+                Console.Write(node.val + " ");
+            }
+            // do nothing if it is a leaf node,
+            // this way we avoid duplicates in output
+        }
+
+        // A function to do boundary traversal
+        // of a given binary tree
+        public virtual void printBoundary(TreeNode node)
+        {
+            if (node == null)
+                return;
+
+            Console.Write(node.val + " ");
+
+            // Print the left boundary in
+            // top-down manner.
+            printBoundaryLeft(node.left);
+
+            // Print all leaf nodes
+            printLeaves(node.left);
+            printLeaves(node.right);
+
+            // Print the right boundary in
+            // bottom-up manner
+            printBoundaryRight(node.right);
+        }
+        #endregion
+
+        #region Check Two trees are same
+
+        public bool IsSameTree(TreeNode p, TreeNode q)
+        {
+            if (p == null && q == null)
+                return true;
+            if ((p == null || q == null) || (p.val != q.val))
+                return false;
+            return IsSameTree(p.left, q.left) && IsSameTree(p.right, q.right);
+        }
+
+        #endregion
+
+        #region Check if BT is a height balanced or not
+
+        //Naive Solution S=>O(1) and T=>O(N^2)
+        //calculate the height of right and left 
+        //subtree and check the difference
+
+        public int GetHeight(TreeNode root)
+        {
+            if (root == null)
+                return 0;
+            return Math.Max(GetHeight(root.left),GetHeight(root.right)) + 1;
+        }
+
+        public bool IsBalanced(TreeNode root)
+        {
+            if (root == null)
+                return true;
+            int leftHeight = GetHeight(root.left);
+            int rightHeight = GetHeight(root.right);
+
+            if (Math.Abs(leftHeight - rightHeight) <= 1 && IsBalanced(root.left)
+                && IsBalanced(root.right))
+                return true;
+            return false;
+        }
+
+        //Optimal Approach S=>O(1) and T=>O(N^2)
+        //just modifying the getheight function
+
+        public int GetHeightBalancedTree(TreeNode root)
+        {
+            //if result==-1 return fals ein main function
+            if (root == null)
+                return 0;
+            int lh = GetHeightBalancedTree(root.left);
+            if (lh == -1)
+                return -1;
+            int rh = GetHeightBalancedTree(root.right);
+            if (rh == -1)
+                return -1;
+            if (Math.Abs(lh - rh) > 1)
+                return -1;
+            return Math.Max(lh,rh) + 1;
+        }
+        #endregion
+
+        #region Lowest Common Ancestor
+
+        //Naive Solution S=>O(N+M) and T=O(N+M) n and m are path for the 
+        //two nodes
+        //by storing the path in the array and checking for common answer
+
+        //Better Solution S=>O(N)(auxillary) and T=>O(N) where N is the nodes 
+        //using recursion
+
+        public TreeNode LowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q)
+        {
+            if (root == null || root == p || root == q)
+                return root;
+            var left = LowestCommonAncestor(root.left, p, q);
+            var right = LowestCommonAncestor(root.right, p, q);
+            if (left == null)
+                return right;
+            else if (right == null)
+                return left;
+            else
+                return root;
+
+        }
+
+        #endregion
+
+        #region Symmetric Binary Tree
+
+        //Optimal solution S=>O(N) and T=>O(N)
+        //preorder traversal with one left and reverse preorder with the other tree
+        public bool IsSymmetric(TreeNode root)
+        {
+            var right = root.right;
+            var left = root.left;
+            return IsSymmetricHelper(right, left);
+        }
+
+        public bool IsSymmetricHelper(TreeNode right, TreeNode left)
+        {
+            if (right == null && left == null)
+                return true;
+            if (right == null || left == null || right.val != left.val)
+                return false;
+            return IsSymmetricHelper(right.left, left.right) &&
+            IsSymmetricHelper(right.right, left.left);
+        }
+
+        #endregion
+
+        #region Convert Binary tree into its mirror
+
+
+        //Optimal Solution S=>O(H) and T=>O(N)
+        //using post order to swap left and right
+        public void Mirror(TreeNode root)
+        {
+            if (root == null)
+                return;
+            //remember to use post order only in this
+            //as the left and right are getting swapped
+            Mirror(root.left);
+            Mirror(root.right);
+            //swapping the left and the right
+            var temp = root.left;
+            root.left = root.right;
+            root.right = temp;
+        }
+
+        #endregion
+
+
     }
 }

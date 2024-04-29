@@ -9,7 +9,7 @@ namespace StriverSDE
     class Heap
     {
         //Array representation of heap
-        static void buildMaxHeap(List<int> arr, int N)
+        public void buildMaxHeap(List<int> arr, int N)
         {
             // Index of last non-leaf node
             int startIdx = (N / 2) - 1;
@@ -23,7 +23,7 @@ namespace StriverSDE
             }
         }
 
-        static void buildMinHeap(List<int> arr, int N)
+        public void buildMinHeap(List<int> arr, int N)
         {
             // Index of last non-leaf node
             int startIdx = (N / 2) - 1;
@@ -485,6 +485,61 @@ namespace StriverSDE
                 printArray(result);
             }
         }
-            #endregion
+        #endregion
+
+        #region Kth largest in stream
+
+        //Naive SOlution S=>O(1) and T=>O(N*NlogN+K)
+        //when adding sort them and return the 
+        //kth element
+
+        public class KthLargest
+        {
+            List<int> arr;
+            int k1;
+            public KthLargest(int k, int[] nums)
+            {
+                k1 = k;
+                Array.Sort(nums);
+                Array.Reverse(nums);
+                arr = nums.ToList();
+            }
+
+            public int Add(int val)
+            {
+                var n = k1 - 1;
+                arr.Add(val);
+                arr = arr.OrderByDescending(x => x).ToList();
+                return arr[n];
+            }
         }
+
+        //Optimal Solution S=>O(1) and T=>O(n*Logn)
+        //using heaps implement extrtact min and top in heap to get this working
+
+        //public class KthLargestOptimal
+        //{
+        //    Heap arr;
+        //    int k1;
+        //    public KthLargestOptimal(int k, int[] nums)
+        //    {
+        //        arr = new Heap();
+        //        k1 = k;
+        //        arr.buildMinHeap(nums.ToList(), nums.Length);
+        //        //for(int i=0;i<nums.Length-k;i++)
+        //            //arr.extractmin();
+        //    }
+
+        //    public int Add(int val)
+        //    {
+        //        var n = k1 - 1;
+        //        arr.InsertMinHeap(val);
+        //        arr.extractmin();
+        //        return //arr.Top();
+        //    }
+        //}
+
+
+        #endregion
+    }
 }

@@ -207,7 +207,7 @@ namespace StriverSDE
         {
             int fact = 1;
             List<int> integrs = new List<int>();
-            for(int i = 1; i < n; i++)
+            for (int i = 1; i < n; i++)
             {
                 fact = fact * i;
                 integrs.Add(i);
@@ -217,8 +217,8 @@ namespace StriverSDE
             StringBuilder ans = new StringBuilder();
             while (true)
             {
-                ans.Append(integrs[k/fact]);
-                integrs.RemoveAt(k/fact);
+                ans.Append(integrs[k / fact]);
+                integrs.RemoveAt(k / fact);
                 if (integrs.Count == 0)
                     break;
                 k = k % fact;
@@ -227,5 +227,150 @@ namespace StriverSDE
             return ans.ToString();
         }
         #endregion
+
+        #region Find all permutation
+
+        //Naive Solution S=>O(N)+O(N) and T=>O(N!XN)
+        //using recursion and a map for storing the values already visited
+
+        public IList<IList<int>> Permute(int[] nums)
+        {
+            var ans = new List<IList<int>>();
+            bool[] freq = new bool[nums.Length];
+            PermuteHelper(nums,new List<int>(),ans,freq,nums.Length);
+            return ans;
+        }
+
+        public void PermuteHelper(int[] nums,List<int> curr,List<IList<int>> ans, bool[] freq,int n)
+        {
+            if (curr.Count == n)
+            {
+                var temp = new int[n];
+                curr.CopyTo(temp);
+                ans.Add(temp);
+                return;
+            }
+            for(int i = 0; i < n; i++)
+            {
+                if (!freq[i])
+                {
+                    freq[i] = true;
+                    curr.Add(nums[i]);
+                    PermuteHelper(nums, curr, ans, freq, n);
+                    curr.RemoveAt(curr.Count - 1);
+                    freq[i] = false;
+                }
+            }
+        }
+        //Optimal Solution S=>O(N) and T=>O(N!XN)
+        //using backtracking and swap method
+        static void swap(int[] nums, int l, int i)
+        {
+            int temp = nums[l];
+            nums[l] = nums[i];
+            nums[i] = temp;
+        }
+
+        // Function to find the possible permutations 
+        static void PermuteHelperOptimal(List<int[]> res, int[] nums, int l, int h)
+        {
+            // Base case: Add the array to result and return 
+            if (l == h)
+            {
+                res.Add((int[])nums.Clone());
+                return;
+            }
+
+            // Permutations made 
+            for (int i = l; i <= h; i++)
+            {
+                // Swapping 
+                swap(nums, l, i);
+
+                // Calling permutations for next greater value of l 
+                PermuteHelperOptimal(res, nums, l + 1, h);
+
+                // Backtracking 
+                swap(nums, l, i);
+            }
+        }
+
+        //Note
+        //void Method1(Dictionary<string, string> dict) {
+        //        dict["a"] = "b";
+        //    dict = new Dictionary<string, string>();
+        //}
+
+        //    void Method2(ref Dictionary<string, string> dict)
+        //    {
+        //        dict["e"] = "f";
+        //        dict = new Dictionary<string, string>();
+        //    }
+        //in second one the dicionary would be replaced
+
+        #endregion
+
+        #region Word Break 2 print all ways
+        //please look afterwards long and important topic
+
+
+        //Optimal Solution S=>O(N) and T=>O()
+        //
+
+        public List<string> WordBreak(List<string> dictionary, string s)
+        {
+            var ansList = new List<string>();
+            WordBreakHelper(dictionary, dictionary.Count, ansList, s);
+            return ansList;
+        }
+        public void WordBreakHelper(List<string> dictionary, int n, List<string> ansList,
+            string s,int indx=0,string currS="")
+        {
+            if (indx >= n)
+                return;
+            if (currS == s)
+                ansList.Add(currS);
+            WordBreakHelper(dictionary,n,ansList,s,indx+1,currS+dictionary[indx]);
+            WordBreakHelper(dictionary, n, ansList, s, indx + 1, currS);
+        }
+
+        #endregion
+
+        #region Grid Unique paths
+
+        //Naive SOlution
+        //using recursion
+        public int UniquePaths(int m, int n)
+        {
+            return UniquePathsHelper(m, n, new Tuple<int, int>(0, 0),
+        new Tuple<int, int>(m - 1, n - 1));
+        }
+        public int UniquePathsHelper(int m, int n,Tuple<int,int> curr,Tuple<int,int> target,int ans=0)
+        {
+            if (curr.Item1 >= m || curr.Item2 >= n)
+                return 0;
+            if (curr.Equals(target))
+                return 1;
+            return UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1 + 1, curr.Item2), target, ans)
+                + UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1, curr.Item2 + 1), target, ans);
+        }
+
+        //Better Solution
+        //using DP memoization
+
+        public int UniquePathsHelper(int m, int n, Tuple<int, int> curr, Tuple<int, int> target, int[][] matrix, int ans = 0
+           )
+        {
+            if (curr.Item1 >= m || curr.Item2 >= n)
+                return 0;
+            if (curr.Equals(target))
+                return 1;
+            if (matrix[curr.Item1][curr.Item2] != -1)
+                return matrix[curr.Item1][curr.Item2];
+            else
+                return matrix[curr.Item1][curr.Item2] = UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1 + 1, curr.Item2), target, matrix, ans)
+                + UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1, curr.Item2 + 1), target, matrix, ans);
+        }
+        #endregion 
     }
 }

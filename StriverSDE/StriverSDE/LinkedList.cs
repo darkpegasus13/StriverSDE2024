@@ -593,5 +593,42 @@ namespace StriverSDE
         }
 
         #endregion
+
+        #region Starting Point in a linked list
+
+        //Naive Solution 
+        //store values in a hash map and then 
+        //check if it is already present
+
+        //Optimal solution
+        //turtoise and hare method
+
+        public LinkedList DetectCycleStartingPoint(LinkedList head)
+        {
+            if (head == null || head.next == null)
+                return null;
+            var slow = head;
+            var fast = head;
+            var entry = head;
+            while (fast.next != null && fast.next.next != null)
+            {
+                slow = slow.next;
+                fast = fast.next.next;
+                if (fast == slow)
+                {
+                    //loop is found
+                    while (entry != slow)
+                    {
+                        //this is for finding the starting point
+                        //of the loop
+                        entry = entry.next;
+                        slow = slow.next;
+                    }
+                    return entry;
+                }
+            }
+            return null;
+        }
+        #endregion
     }
 }

@@ -237,5 +237,148 @@ namespace StriverSDE
         }
 
         #endregion
+
+        //Naive Solution S=>O(1) and T=>O(LogN)
+        //
+        #region Ceil/Floor from BST
+        public int FindCeil(Node root, int input)
+        {
+            if (root == null)
+                return -1;
+
+            //Your code here
+            Node res = null;
+            while (root != null)
+            {
+                if (root.val == input)
+                    return root.val;
+                else if (root.val > input)
+                {
+                    //storing the possible answers
+                    //and updating the answer to closest ceil
+                    res = root;
+                    root = root.left;
+                }
+                else
+                    root = root.right;
+            }
+            if (res == null)
+                return -1;
+            return res.val;
+        }
+
+        public int FindFloor(Node root, int input)
+        {
+            if (root == null)
+                return -1;
+
+            //Your code here
+            Node res = null;
+            while (root != null)
+            {
+                if (root.val == input)
+                    return root.val;
+                else if (root.val > input)
+                {
+                    root = root.left;
+                }
+                else
+                {
+                    res = root;
+                    root = root.right;
+                }
+            }
+            if (res == null)
+                return -1;
+            return res.val;
+        }
+        #endregion
+
+        #region Kth Largest/smallest element
+        //Naive Solution S=>O(N) and T=>O(N)
+        //as Inorder traversal of BST is sorted k-1 is smallest and n-k-1 is largest
+
+
+        //Optimal Solution
+        //do inorder traversal and maintain a counter for smaller
+        //do reverse inorder traversal(right,node,left) and maintain a counter for larger
+        //,int[] counter,int[] kthsmallest
+        public void kthSmallest(TreeNode root, int k,int[] answer,int[] counter)
+        {
+            if (root == null || counter[0] >= k)
+                return;
+            kthSmallest(root.left, k, answer, counter);
+            counter[0]++;
+            if (counter[0] == k)
+            {
+                answer[0] = root.val;
+                return;
+            }
+            kthSmallest(root.right,k,answer,counter);
+        }
+
+        public void KthLargest(TreeNode root, int k, int[] answer, int[] counter)
+        {
+            if (root == null || counter[0] >= k)
+                return;
+            KthLargest(root.right, k, answer, counter);
+            counter[0]++;
+            if (counter[0] == k)
+            {
+                answer[0] = root.val;
+                return;
+            }
+            KthLargest(root.left, k, answer, counter);
+        }
+
+        #endregion
+
+        #region Two sum in BST
+
+        //Naive Solution S=>O(N) and T=>O(2N)
+        //the inorder traversal gives a sorted array and apply 2 sum on it
+        public bool FindTarget(TreeNode root, int k)
+        {
+            List<int> v = new List<int>();
+            //storing result in a list
+            InorderInsert(root, v);
+            //normal 2 sum problem
+            int n = v.Count;
+            int i = 0;
+            int j = n - 1;
+            while (j > i)
+            {
+                if (v[i] + v[j] == k)
+                {
+                    return true;
+                }
+                else if (v[i] + v[j] > k)
+                {
+                    j--;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            return false;
+        }
+
+        public static void InorderInsert(TreeNode root, List<int> v)
+        {
+            if (root == null)
+            {
+                return;
+            }
+            InorderInsert(root.left, v);
+            v.Add(root.val);
+            InorderInsert(root.right, v);
+        }
+
+        //Optimal Solutino S=>O(1) and T=>O()
+        //using bst iterator
+        #endregion
+
+       
     }
 }

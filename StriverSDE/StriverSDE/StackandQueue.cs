@@ -43,19 +43,19 @@ namespace StriverSDE
             Stack<int> st = new Stack<int>();
             //we can consider appending the same list to right of orignal array
             //but instead we will start from 2n
-            for(int i = 2*n-1; i >= 0; i--)
+            for (int i = 2 * n - 1; i >= 0; i--)
             {
                 if (st.Count == 0)
-                    if(i<n)
+                    if (i < n)
                         ans[i] = -1;
-                else
-                {
-                    while (st.Count>0 && st.Peek() < arr[i%n])
-                        st.Pop();
-                    if(i<n)
-                        ans[i] =st.Count==0?-1:st.Peek();
-                }
-                st.Push(arr[i%n]);
+                    else
+                    {
+                        while (st.Count > 0 && st.Peek() < arr[i % n])
+                            st.Pop();
+                        if (i < n)
+                            ans[i] = st.Count == 0 ? -1 : st.Peek();
+                    }
+                st.Push(arr[i % n]);
             }
             return ans;
         }
@@ -102,6 +102,118 @@ namespace StriverSDE
             }
         }
         #endregion
+
+        #region online stock span
+        //Optimal Solution S=>O(N) and T=>O(N)
+        //by using a stack and storing the count and price in it
+        public class StockSpanner
+        {
+            private Stack<(int, int)> stack;
+
+            public StockSpanner()
+            {
+                stack = new Stack<(int, int)>();
+            }
+
+            public int Next(int price)
+            {
+                int span = 1;
+
+                while (stack.Count > 0 && stack.Peek().Item1 <= price)
+                    span += stack.Pop().Item2;
+
+                stack.Push((price, span));
+
+                return span;
+            }
+        }
+
+        #endregion
+
+        #region Next Greater Element
+
+        public int[] NextGreaterElement(int[] nums1, int[] nums2)
+        {
+            Stack<int> st = new Stack<int>();
+            Dictionary<int, int> d = new Dictionary<int, int>();
+            int[] ans = Enumerable.Repeat(-1, nums1.Length).ToArray();
+            for (int n = 0; n < nums1.Length; n++)
+            {
+                d.Add(nums1[n], n);
+            }
+            foreach (int num in nums2)
+            {
+                if (st.Count > 0)
+                {
+                    if (st.Count != 0 && num < st.Peek() && nums1.Contains(num))
+                    {
+                        st.Push(num);
+                    }
+                    else if (st.Count != 0 && num > st.Peek())
+                    {
+                        while (st.Count != 0 && st.Peek() < num)
+                        {
+                            int temp = st.Pop();
+                            ans[d[temp]] = num;
+                        }
+                    }
+                }
+                if (nums1.Contains(num))
+                    st.Push(num);
+            }
+            return ans;
+        }
+        #endregion
+
+        #region Largest Area in a Histogram
+
+        //Naive Solution S=>O(1) and T=>O(N*N)
+        //by taking a start and end and calculate all possible areas
+
+        public int largestArea(int[] arr, int n)
+        {
+            int maxArea = int.MinValue;
+            for (int i = 0; i < n; i++)
+            {
+
+                int minHeight = int.MaxValue;
+                for (int j = i; j < n; j++)
+                {
+                    minHeight = Math.Min(minHeight, arr[j]);
+                    maxArea = Math.Max(maxArea, minHeight * (j - i + 1));
+                }
+            }
+            return maxArea;
+        }
+
+        //Optimal Solution S=>O(N) and T=>O(N)
+        //using concept of next greater element
+
+        public int LargestRectangleArea(int[] heights)
+        {
+            int maxm = 0;
+            Stack<int> st = new Stack<int>();
+            int n = heights.Length;
+            for (int i = 0; i <= n; i++)
+            {
+                while (st.Count != 0 && (i == n || heights[st.Peek()] >= heights[i]))
+                {
+                    int h = heights[st.Peek()];
+                    st.Pop();
+                    int w;
+                    if (st.Count == 0)
+                        w = i;
+                    else
+                        w = i - st.Peek() - 1;
+                    maxm = Math.Max(maxm, h * w);
+                }
+                st.Push(i);
+            }
+            return maxm;
+        }
+
+        #endregion
+        
     }
     #region Implement Stack using Array
     class Stack
@@ -367,6 +479,64 @@ namespace StriverSDE
         {
             return q1.Count == 0;
         }
+        #region Rotten oranges
+
+        //Optimal Approach S=>O(N) && T=>O(N*N)*4
+        //by creating another visited matrix and keeping count
+        //of fresh oranges
+        public int OrangesRotting(int[][] grid)
+        {
+            if (grid == null || grid[0].Length == 0)
+                return 0;
+            int m = grid.Length, n = grid[0].Length;
+            int fresh = 0;
+
+            Queue<(int, int)> queue = new Queue<(int, int)>();
+
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (grid[i][j] == 1)
+                        fresh++;
+                    else if (grid[i][j] == 2)
+                        queue.Enqueue((i, j));
+                }
+            }
+            //if already rotten or empty return true
+            if (fresh == 0)
+                return 0;
+
+            int time = 0;
+            int[,] dir = new int[,] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+
+            // check fresh before BFS traverse the graph
+            while (queue.Count > 0 && fresh > 0)
+            {
+                time++;
+                int size = queue.Count;
+                for (int i = 0; i < size; i++)
+                {
+                    var curr = queue.Dequeue();
+                    for (int j = 0; j < 4; j++)
+                    {
+                        int newRow = curr.Item1 + dir[j, 0];
+                        int newCol = curr.Item2 + dir[j, 1];
+
+                        if (newRow >= 0 && newRow < m && newCol >= 0 && newCol < n && grid[newRow][newCol] == 1)
+                        {
+                            grid[newRow][newCol] = 2;
+                            queue.Enqueue((newRow, newCol));
+                            fresh--;
+                        }
+                    }
+                }
+            }
+
+            return fresh == 0 ? time : -1;
+        }
+
+        #endregion
     }
     #endregion
 
@@ -420,6 +590,107 @@ namespace StriverSDE
     //        s1.Push(s2.Pop());
     //    }
     //}
+
+    #endregion
+
+    #region MinStack
+    //Naive Solution S=>O(2N) and T=>O(1)
+    //pushing the minimal and value in stack itself
+    public class MinStack
+    {
+
+        Stack<Tuple<int, int>> st;
+        public MinStack()
+        {
+            st = new Stack<Tuple<int, int>>();
+        }
+
+        public void Push(int val)
+        {
+            if (st.Count == 0)
+                st.Push(new Tuple<int, int>(val, val));
+            else
+            {
+                var temp = st.Peek();
+                if (temp.Item2 > val)
+                    st.Push(new Tuple<int, int>(val, val));
+                else
+                    st.Push(new Tuple<int, int>(val, temp.Item2));
+            }
+        }
+
+        public void Pop()
+        {
+            st.Pop();
+        }
+
+        public int Top()
+        {
+            return st.Peek().Item1;
+        }
+
+        public int GetMin()
+        {
+            return st.Peek().Item2;
+        }
+    }
+
+    //optimal solution S=>O(N) and T=>O(1)
+    //by inserting a modified value into the stack 
+    //and then perform calculations to get correct result
+    //use long as integer overflow is happening
+
+    public class MinStackOptimal
+    {
+        Stack<long> st;
+        long min;
+        public MinStackOptimal()
+        {
+            st = new Stack<long>();
+            min = long.MaxValue;
+        }
+
+        public void Push(int val)
+        {
+            if (st.Count == 0)
+            {
+                st.Push(val);
+                min = val;
+            }
+            else
+            {
+                if (min > val)
+                {
+                    st.Push(2 * val - min);
+                    min = val;
+                }
+                else
+                    st.Push(val);
+            }
+        }
+
+        public void Pop()
+        {
+            if (st.Count == 0)
+                return;
+            var temp = st.Pop();
+            if (temp < min)
+                min = 2 * min - temp;
+        }
+
+        public int Top()
+        {
+            var temp = st.Peek();
+            if (temp < min)
+                return (int)min;
+            return (int)temp;
+        }
+
+        public int GetMin()
+        {
+            return (int)min;
+        }
+    }
 
     #endregion
 
