@@ -1211,6 +1211,58 @@ public class ArrayComp
         return cnt;
     }
 
+    #endregion
+    #region 4Sum
+
+    //Naive SOlution S=>O(1) and T=>O(N^4)
+    //using 4 loops 
+
+    //Better Solution S=>O(N) and T=>O(N^3)
+    //using 3 loops and storing the element in map
+    //always remember only to store the elements between j and k in the map
+
+    //Optimal solution S=>O(1) and T=>O(N^3)
+    //using 2 loops and two pointer aproach.;
+
+    public IList<IList<int>> FourSum(int[] nums, int target)
+    {
+        var ans = new List<IList<int>>();
+        Array.Sort(nums);
+        int n = nums.Length;
+        for (int i = 0; i < n; i++)
+        {
+            //skip duplicates
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            for (int j = i + 1; j < n; j++)
+            {
+                if (j != i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                int k = j + 1;
+                int l = n - 1;
+                while (k < l)
+                {
+                    long sum = (long)nums[i] + (long)nums[j] + (long)nums[k] + (long)nums[l];
+                    if (sum < target)
+                        k++;
+                    else if (sum > target)
+                        l--;
+                    else
+                    {
+                        ans.Add(new List<int>() { nums[i], nums[j], nums[k], nums[l] });
+                        l--;
+                        k++;
+                        while (k < l && nums[k] == nums[k - 1])
+                            k++;
+                        while (k < l && nums[l] == nums[l + 1])
+                            l--;
+                    }
+                }
+            }
+        }
+        return ans;
+    }
 
     #endregion
+
 }

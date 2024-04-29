@@ -16,7 +16,7 @@ namespace StriverSDE
             //arr.MaxSubArrayPrintRange(new int [] { 1, 2, 3, -2, 5 });
             //arr.SubarraySum(new int[]{ 9,-3,3,-1,6,-5},0);
             //arr.Merge(new int[] { 5,6,4,0,0,0},3,new int[] {3,2,4 },3);
-            arr.MergeSort(new int[] { 1, 3, 2, 3, 1 }, 0, 5);
+            arr.FourSum(new int[] {1, 0, -1, 0, -2, 2}, 0);
             #endregion
 
             #region LL
