@@ -523,4 +523,115 @@ public class ArrayComp
         return mxcont;
     }
     #endregion
+
+    #region Find the duplicate in an array of N+1 integers
+
+    //Naive Solution S=>(N*N) and T=>O(N*N)
+    //by taking a new array and putting the first column in last column and so on
+
+    //Optimal Solution S=>O(1) and T=>O(N*N)
+    //by transposing and then reversing the row 
+    public void Rotate(int[][] matrix)
+    {
+        int n = matrix.Length;
+        int m = matrix[0].Length;
+        Console.WriteLine(m);
+        //transpose
+        for (int i = 0; i < n; i++)
+        {
+            //optimised by taking i+1 as 
+            //i==j no sense of swapping
+            for (int j = i + 1; j < m; j++)
+            {
+                (matrix[i][j], matrix[j][i]) = (matrix[j][i], matrix[i][j]);
+            }
+        }
+        //reverse
+        for (int i = 0; i < n; i++)
+        {
+            int j = 0;
+            while (j < m / 2)
+            {
+                (matrix[i][j], matrix[i][m - j - 1]) = (matrix[i][m - j - 1], matrix[i][j]);
+                j++;
+            }
+        }
+    }
+    #endregion
+
+    #region Find the Duplicate Number
+    //Naive Solution S=>O(1) and T=>O(NLogN+N)
+    //using sorting
+
+    //Naive Solution S=>O(N) and T=>O(N)
+    //using the hash map and keeping the counts
+
+    //Optimal Solution  S=>O(1) and T=>O(N)
+    //using XOR of every number with zero and then 
+    //doing XOR for 1 to n+1
+
+    //Optimal Solution S=>O(1) and T=>O(N)
+    //using the Linked List Cycle method
+    public int FindDuplicate(int[] nums) {
+    int slow = nums[0];
+    int fast = nums[0];
+    slow=nums[slow];
+        fast=nums[nums[fast]];
+        while(slow!=fast){
+            slow=nums[slow];
+            fast = nums[nums[fast]];
+        }
+slow = nums[0];
+while (slow != fast)
+{
+    slow = nums[slow];
+    fast = nums[fast];
+}
+return slow;
+    }
+    #endregion
+
+    #region POW(x,n)
+    //Naive Solution S=>O(1) and T=>O(N)
+    //using for loop 
+    public double Pow(int x,int n)
+    {
+        double ans = 1.0;
+        long nn = n;
+        if (n < 0)
+            nn = nn * -1;
+        for (int i = 0; i < nn; i++)
+        {
+            ans = ans * x;
+        }
+        return n < 0 ? (1.00 / ans) : ans;
+    }
+
+    //Optimal Solution S=>O(1) and T=>O(logN)
+    //using maths logic
+
+    public double PowOptimal(int x, int n)
+    {
+        double ans = 1.0;
+        //taking long to avoid overflow
+        long nn = n;
+        if (nn < 0) nn = -1 * nn;
+        while (nn > 0)
+        {
+            if (nn % 2 == 1)
+            {
+                ans = ans * x;
+                nn = nn - 1;
+            }
+            else
+            {
+                x = x * x;
+                nn = nn / 2;
+            }
+        }
+        if (n < 0) ans = (double)(1.0) / (double)(ans);
+        return ans;
+    }
+
+    #endregion
 }

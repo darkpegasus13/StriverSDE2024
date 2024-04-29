@@ -12,9 +12,9 @@ namespace StriverSDE
         static void Main(string[] args)
         {
             #region Array
-            //Console.WriteLine("df");
-            //ArrayComp arr = new ArrayComp();
+            ArrayComp arr = new ArrayComp();
             //arr.MaxSubArrayPrintRange(new int [] { 1, 2, 3, -2, 5 });
+            arr.pow(2,-2);
             #endregion
 
             #region LL
@@ -22,7 +22,7 @@ namespace StriverSDE
             //ll.next = new LinkedList(1);
             //ll.next.next = new LinkedList(2);
             //ll.RotateByK(ll,4);
-            ll.IsPalindrome();
+            //ll.IsPalindrome();
             #endregion
 
             #region greedy
