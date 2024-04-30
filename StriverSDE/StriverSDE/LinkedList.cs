@@ -630,5 +630,50 @@ namespace StriverSDE
             return null;
         }
         #endregion
+
+        #region Reverse Node in K-group
+
+        //Optimal Solution S=>O(1) and T=>O(N)
+        //
+
+        public int LengthLL(LinkedList head)
+        {
+            int len = 0;
+            while (head != null)
+            {
+                head = head.next;
+                len += 1;
+            }
+            return len;
+        }
+
+        public LinkedList ReverseKGroup(LinkedList head, int k)
+        {
+            if (head == null || k == 1)
+                return head;
+            LinkedList dummy = new LinkedList(-1);
+            dummy.next = head;
+            LinkedList curr;
+            var prev = dummy;
+            LinkedList nex;
+            int lenLL = LengthLL(head);
+            while (lenLL >= k)
+            {
+                curr = prev.next;
+                nex = curr.next;
+                for (int i = 1; i < k; i++)
+                {
+                    curr.next = nex.next;
+                    nex.next = prev.next;
+                    prev.next = nex;
+                    nex = curr.next;
+                }
+                prev = curr;
+                lenLL -= k;
+            }
+            return dummy.next;
+        }
+
+        #endregion
     }
 }

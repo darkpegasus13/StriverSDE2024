@@ -938,96 +938,96 @@ public class ArrayComp
     //Naive Solution S=>O(1) and T => O(N ^ 2)
     //using two loops and then checking the condition
 
-        static void Merge(int[] arr, int low, int mid, int high)
+    static void Merge(int[] arr, int low, int mid, int high)
+    {
+        // Calculate the lengths of the two subarrays
+        int len1 = mid - low + 1;
+        int len2 = high - mid;
+
+        // Create temporary arrays to hold the subarrays
+        int[] first = new int[len1];
+        int[] second = new int[len2];
+
+        // Copy data from the main array to the temporary arrays
+        int k = low;
+        for (int a = 0; a < len1; a++)
         {
-            // Calculate the lengths of the two subarrays
-            int len1 = mid - low + 1;
-            int len2 = high - mid;
+            first[a] = arr[k++];
+        }
 
-            // Create temporary arrays to hold the subarrays
-            int[] first = new int[len1];
-            int[] second = new int[len2];
-
-            // Copy data from the main array to the temporary arrays
-            int k = low;
-            for (int a = 0; a < len1; a++)
-            {
-                first[a] = arr[k++];
-            }
-
-            k = mid + 1;
-            for (int a = 0; a < len2; a++)
-            {
-                second[a] = arr[k++];
-            }
+        k = mid + 1;
+        for (int a = 0; a < len2; a++)
+        {
+            second[a] = arr[k++];
+        }
 
         // Merge the two subarrays back into the main array
         int i = 0;
-            int j = 0;
-            k = low;
-            while (i < len1 && j < len2)
-            {
-                // Compare and merge elements in sorted order
-                if (first[i] <= second[j])
-                {
-                    arr[k++] = first[i++];
-                }
-                else
-                {
-                    arr[k++] = second[j++];
-                }
-            }
-
-            // Copy any remaining elements from the temporary arrays
-            while (i < len1)
+        int j = 0;
+        k = low;
+        while (i < len1 && j < len2)
+        {
+            // Compare and merge elements in sorted order
+            if (first[i] <= second[j])
             {
                 arr[k++] = first[i++];
             }
-
-            while (j < len2)
+            else
             {
                 arr[k++] = second[j++];
             }
         }
 
-        // Function to count the reverse pairs using merge sort
-        static int CountReversePairs(int[] arr, int low, int mid, int high)
+        // Copy any remaining elements from the temporary arrays
+        while (i < len1)
         {
-            int cnt = 0;
-            int j = mid + 1;
-            for (int i = low; i <= mid; i++)
-            {
-                while (i <= high && j<=high && arr[i] > 2 * arr[j])
-                {
-                    j++;
-                }
-                cnt += (j - (mid + 1));
-            }
-            return cnt;
+            arr[k++] = first[i++];
         }
 
-        // Merge Sort function to sort the array and count reverse pairs
-        public int MergeSort(int[] arr, int low, int high)
+        while (j < len2)
         {
-            int cnt = 0;
-            if (low >= high)
+            arr[k++] = second[j++];
+        }
+    }
+
+    // Function to count the reverse pairs using merge sort
+    static int CountReversePairs(int[] arr, int low, int mid, int high)
+    {
+        int cnt = 0;
+        int j = mid + 1;
+        for (int i = low; i <= mid; i++)
+        {
+            while (i <= high && j <= high && arr[i] > 2 * arr[j])
             {
-                return cnt;
+                j++;
             }
-            int mid = low + (high - low) / 2;
+            cnt += (j - (mid + 1));
+        }
+        return cnt;
+    }
 
-            // Recursively count reverse pairs in left and right halves
-            cnt += MergeSort(arr, low, mid);
-            cnt += MergeSort(arr, mid + 1, high);
-
-            // Merge the sorted halves and count reverse pairs
-            cnt += CountReversePairs(arr, low, mid, high);
-
-            // Merge the two halves
-            Merge(arr, low, mid, high);
-
+    // Merge Sort function to sort the array and count reverse pairs
+    public int MergeSort(int[] arr, int low, int high)
+    {
+        int cnt = 0;
+        if (low >= high)
+        {
             return cnt;
         }
+        int mid = low + (high - low) / 2;
+
+        // Recursively count reverse pairs in left and right halves
+        cnt += MergeSort(arr, low, mid);
+        cnt += MergeSort(arr, mid + 1, high);
+
+        // Merge the sorted halves and count reverse pairs
+        cnt += CountReversePairs(arr, low, mid, high);
+
+        // Merge the two halves
+        Merge(arr, low, mid, high);
+
+        return cnt;
+    }
 
     #endregion
 
@@ -1051,26 +1051,26 @@ public class ArrayComp
         long s2n = ((n * (n + 1)) * (2 * n + 1)) / 6;
 
         long S = 0, S2 = 0;
-        for(int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             S += arr[i];
             S2 += (long)arr[i] * (long)arr[i];
         }
 
         //S-Sn = X-Y
-        long val1 = S-sn;
+        long val1 = S - sn;
 
         //S2-S2n = X^2-Y^2
-        long val2 = S2-s2n;
+        long val2 = S2 - s2n;
 
         //S2-S2n=(X-Y)(X+Y)
         val2 = val2 / val1;
 
-        long x = (val1 + val2)/2;
+        long x = (val1 + val2) / 2;
         long y = x - val1;
 
         int[] ans = new int[] { (int)x, (int)y };
-        return ans; 
+        return ans;
 
     }
 
@@ -1080,59 +1080,59 @@ public class ArrayComp
     //3 for repeating and 1 for missing
     int[] findTwoElement2(int[] arr, int n)
     {
-            /* Will hold xor of all elements
-            and numbers from 1 to n */
-            int xor1;
+        /* Will hold xor of all elements
+        and numbers from 1 to n */
+        int xor1;
 
-            /* Will have only single set bit of xor1 */
-            int set_bit_no;
+        /* Will have only single set bit of xor1 */
+        int set_bit_no;
 
-            int i;
-            int x = 0,y = 0;
+        int i;
+        int x = 0, y = 0;
 
-            xor1 = arr[0];
+        xor1 = arr[0];
 
-            /* Get the xor of all array elements */
-            for (i = 1; i < n; i++)
-                xor1 = xor1 ^ arr[i];
+        /* Get the xor of all array elements */
+        for (i = 1; i < n; i++)
+            xor1 = xor1 ^ arr[i];
 
-            /* XOR the previous result with numbers from 
-            1 to n*/
-            for (i = 1; i <= n; i++)
-                xor1 = xor1 ^ i;
+        /* XOR the previous result with numbers from 
+        1 to n*/
+        for (i = 1; i <= n; i++)
+            xor1 = xor1 ^ i;
 
-            /* Get the rightmost set bit in set_bit_no */
-            set_bit_no = xor1 & ~(xor1 - 1);
+        /* Get the rightmost set bit in set_bit_no */
+        set_bit_no = xor1 & ~(xor1 - 1);
 
-            /* Now divide elements in two sets by comparing
-            rightmost set bit of xor1 with bit at same 
-            position in each element. Also, get XORs of two
-            sets. The two XORs are the output elements.The 
-            following two for loops serve the purpose */
-            for (i = 0; i < n; i++)
-            {
-                if ((arr[i] & set_bit_no) != 0)
+        /* Now divide elements in two sets by comparing
+        rightmost set bit of xor1 with bit at same 
+        position in each element. Also, get XORs of two
+        sets. The two XORs are the output elements.The 
+        following two for loops serve the purpose */
+        for (i = 0; i < n; i++)
+        {
+            if ((arr[i] & set_bit_no) != 0)
 
-                    /* arr[i] belongs to first set */
-                    x = x ^ arr[i];
+                /* arr[i] belongs to first set */
+                x = x ^ arr[i];
 
-                else
+            else
 
-                    /* arr[i] belongs to second set*/
-                    y = y ^ arr[i];
-            }
-            for (i = 1; i <= n; i++)
-            {
-                if ((i & set_bit_no) != 0)
+                /* arr[i] belongs to second set*/
+                y = y ^ arr[i];
+        }
+        for (i = 1; i <= n; i++)
+        {
+            if ((i & set_bit_no) != 0)
 
-                    /* i belongs to first set */
-                    x = x ^ i;
+                /* i belongs to first set */
+                x = x ^ i;
 
-                else
+            else
 
-                    /* i belongs to second set*/
-                    y = y ^ i;
-            }
+                /* i belongs to second set*/
+                y = y ^ i;
+        }
 
         /* *x and *y hold the desired output elements */
         return new int[] { x, y };
@@ -1150,14 +1150,14 @@ public class ArrayComp
     public long inversionCount(long[] arr, int N)
     {
         //Your Code Here
-        return MergeSort(arr, 0, N-1);
+        return MergeSort(arr, 0, N - 1);
     }
     static long Merge(long[] arr, int low, int mid, int high)
     {
         List<long> temp = new List<long>();
         // Calculate the lengths of the two subarrays
-        int left = low ;
-        int right = mid+1;
+        int left = low;
+        int right = mid + 1;
 
         long cnt = 0;
 
@@ -1262,6 +1262,67 @@ public class ArrayComp
         }
         return ans;
     }
+
+    #endregion
+
+    #region count number of subarray with xor k
+    //Naive Solution S=>O(1) and T=>O(N^3)
+    static long subarrayXor(int[] arr, int n, int m)
+    {
+        int cnt = 0;
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i; j < n; j++)
+            {
+                var xor = 0;
+                for (int k = i; k < j; k++)
+                {
+                    xor = xor ^ arr[k];
+                    if (xor == m)
+                        cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+
+    //Better Solution S=>O(1) and T=>O(N^2)
+    static long subarrayXorBetter(int[] arr,int n, int m)
+    {
+        int cnt = 0;
+        for(int i = 0; i < n; i++)
+        {
+            var xor = 0;
+            for(int j = i; j < n; j++)
+            {
+                xor = xor ^ arr[j];
+                if (xor == m)
+                    cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    //Optimal Solution S=>O(N) and T=>O(1)
+    //using maths 
+    static long subarrayXorOptimal(int[] arr, int n, int m)
+    {
+        Dictionary<int, int> map = new Dictionary<int, int>();
+        int cnt = 0;
+        map.Add(0, 1);
+        var xor = 0;
+        for(int i = 0; i < n; i++)
+        {
+            xor = xor ^ arr[i];
+            if (map.ContainsKey(xor ^ m))
+                cnt += map[xor ^ m];
+            if (map.ContainsKey(arr[i]))
+                map[arr[i]] += 1;
+            else
+                map.Add(arr[i], 1);
+        }
+        return cnt;
+     }
 
     #endregion
 
