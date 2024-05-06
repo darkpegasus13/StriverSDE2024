@@ -12,12 +12,12 @@ namespace StriverSDE
         static void Main(string[] args)
         {
             #region Array
-            ArrayComp arr = new ArrayComp();
+            //ArrayComp arr = new ArrayComp();
             //arr.MaxSubArrayPrintRange(new int [] { 1, 2, 3, -2, 5 });
-            arr.pow(2,-2);
+            //arr.pow(2,-2);
             //arr.SubarraySum(new int[]{ 9,-3,3,-1,6,-5},0);
             //arr.Merge(new int[] { 5,6,4,0,0,0},3,new int[] {3,2,4 },3);
-            arr.FourSum(new int[] {1, 0, -1, 0, -2, 2}, 0);
+            //arr.FourSum(new int[] {1, 0, -1, 0, -2, 2}, 0);
             #endregion
 
             #region LL
@@ -35,18 +35,26 @@ namespace StriverSDE
 
             #region Stack and Queue
 
-            //StackandQueue stq = new StackandQueue();
+            StackandQueue stq = new StackandQueue();
             //Stack<int> st = new Stack<int>();
             //st.Push(11);
             //st.Push(9);
             //st.Push(97);
             //stq.sortStack(st);
+            //LFUCache lf = new LFUCache(2);
+            //lf.Put(1,10);
+            //lf.Put(2, 11);
+            //lf.Get(1);
+            //lf.Put(3, 12);
+            //lf.Get(2);
+            //stq.celebrityOptimal(new int[3, 3] { {0, 1 ,0 }, {0, 0 ,0 }, {0, 1, 0 } }, 3);
+            stq.MaxSlidingWindow(new int[] {1, 3, -1, -3, 5, 3, 6, 7 },3);
 
             #endregion
 
             #region Recursion
 
-            //Recursion recur = new Recursion();
+            Recursion recur = new Recursion();
             //recur.Permute(new int[]{ 1,2,3});
             //foreach(string s in recur.WordBreak(new List<string>() {"god","is","now","no","where","here" },
             //    "godisnowherenowhere"))
@@ -62,6 +70,17 @@ namespace StriverSDE
             //    }
             //    Console.WriteLine();
             //}
+            //recur.Solve(new char[][] { new char[]{ '3', '.','6', '5', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
+            //});
+   
 
             #endregion
 

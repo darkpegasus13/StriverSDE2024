@@ -1101,401 +1101,400 @@ return slow;
     }
     #endregion
 
-    #region POW(x,n)
-    //Naive Solution S=>O(1) and T=>O(N)
-    //using for loop 
-    public double Pow(int x,int n)
-    {
-        double ans = 1.0;
-        long nn = n;
-        if (n < 0)
-            nn = nn * -1;
-        for (int i = 0; i < nn; i++)
-        {
-            ans = ans * x;
-        }
-        return n < 0 ? (1.00 / ans) : ans;
-    }
-        return cnt;
-    }
+    //#region POW(x,n)
+    ////Naive Solution S=>O(1) and T=>O(N)
+    ////using for loop 
+    //public double Pow(int x,int n)
+    //{
+    //    double ans = 1.0;
+    //    long nn = n;
+    //    if (n < 0)
+    //        nn = nn * -1;
+    //    for (int i = 0; i < nn; i++)
+    //    {
+    //        ans = ans * x;
+    //    }
+    //    return n < 0 ? (1.00 / ans) : ans;
+    //}
+    //    return cnt;
+    //}
 
-    //Optimal Solution S=>O(1) and T=>O(logN)
-    //using maths logic
+    ////Optimal Solution S=>O(1) and T=>O(logN)
+    ////using maths logic
 
-    public double PowOptimal(int x, int n)
-    {
-        double ans = 1.0;
-        //taking long to avoid overflow
-        long nn = n;
-        if (nn < 0) nn = -1 * nn;
-        while (nn > 0)
-        {
-            if (nn % 2 == 1)
-            {
-                ans = ans * x;
-                nn = nn - 1;
-            }
-            else
-            {
-                x = x * x;
-                nn = nn / 2;
-            }
-        }
-        if (n < 0) ans = (double)(1.0) / (double)(ans);
-        return ans;
-    }
+    //public double PowOptimal(int x, int n)
+    //{
+    //    double ans = 1.0;
+    //    //taking long to avoid overflow
+    //    long nn = n;
+    //    if (nn < 0) nn = -1 * nn;
+    //    while (nn > 0)
+    //    {
+    //        if (nn % 2 == 1)
+    //        {
+    //            ans = ans * x;
+    //            nn = nn - 1;
+    //        }
+    //        else
+    //        {
+    //            x = x * x;
+    //            nn = nn / 2;
+    //        }
+    //    }
+    //    if (n < 0) ans = (double)(1.0) / (double)(ans);
+    //    return ans;
+    //}
 
-    #endregion
+    //#endregion
 
-    #region repeat and missing number
+    //#region repeat and missing number
 
-    //Naive Solution S=>O(1) and T=>O(N^2)
-    //run a loop to 1 to n both inclusive and see if it 
-    //repeat or missing
+    ////Naive Solution S=>O(1) and T=>O(N^2)
+    ////run a loop to 1 to n both inclusive and see if it 
+    ////repeat or missing
 
-    //Better Solution S=>O(N) and T=>O(2N)
-    //using hashing store number 0 to n from the array in a hash
-    //number with value 2 is repeat and if not present in map 
-    //it is missing
+    ////Better Solution S=>O(N) and T=>O(2N)
+    ////using hashing store number 0 to n from the array in a hash
+    ////number with value 2 is repeat and if not present in map 
+    ////it is missing
 
-    //Optimal Solution S=>O(1) and T=>O(N)
-    //using maths quadratic equations
+    ////Optimal Solution S=>O(1) and T=>O(N)
+    ////using maths quadratic equations
 
-    int[] findTwoElement(int[] arr, int n)
-    {
-        long sn = (n * (n + 1)) / 2;
-        long s2n = ((n * (n + 1)) * (2 * n + 1)) / 6;
+    //int[] findTwoElement(int[] arr, int n)
+    //{
+    //    long sn = (n * (n + 1)) / 2;
+    //    long s2n = ((n * (n + 1)) * (2 * n + 1)) / 6;
 
-        long S = 0, S2 = 0;
-        for (int i = 0; i < n; i++)
-        {
-            S += arr[i];
-            S2 += (long)arr[i] * (long)arr[i];
-        }
+    //    long S = 0, S2 = 0;
+    //    for (int i = 0; i < n; i++)
+    //    {
+    //        S += arr[i];
+    //        S2 += (long)arr[i] * (long)arr[i];
+    //    }
 
-        //S-Sn = X-Y
-        long val1 = S - sn;
+    //    //S-Sn = X-Y
+    //    long val1 = S - sn;
 
-        //S2-S2n = X^2-Y^2
-        long val2 = S2 - s2n;
+    //    //S2-S2n = X^2-Y^2
+    //    long val2 = S2 - s2n;
 
-        //S2-S2n=(X-Y)(X+Y)
-        val2 = val2 / val1;
+    //    //S2-S2n=(X-Y)(X+Y)
+    //    val2 = val2 / val1;
 
-        long x = (val1 + val2) / 2;
-        long y = x - val1;
+    //    long x = (val1 + val2) / 2;
+    //    long y = x - val1;
 
-        int[] ans = new int[] { (int)x, (int)y };
-        return ans;
+    //    int[] ans = new int[] { (int)x, (int)y };
+    //    return ans;
 
-    }
+    //}
 
-    //Optimal Solution S=>O(1) and T=>O(N)
-    //using XOR we divide the numbers according to one bit where the bit was 1
-    //this will create two groups one for 0 and other for 1 the answer would be accuring odd number of times
-    //3 for repeating and 1 for missing
-    int[] findTwoElement2(int[] arr, int n)
-    {
-        /* Will hold xor of all elements
-        and numbers from 1 to n */
-        int xor1;
+    ////Optimal Solution S=>O(1) and T=>O(N)
+    ////using XOR we divide the numbers according to one bit where the bit was 1
+    ////this will create two groups one for 0 and other for 1 the answer would be accuring odd number of times
+    ////3 for repeating and 1 for missing
+    //int[] findTwoElement2(int[] arr, int n)
+    //{
+    //    /* Will hold xor of all elements
+    //    and numbers from 1 to n */
+    //    int xor1;
 
-        /* Will have only single set bit of xor1 */
-        int set_bit_no;
+    //    /* Will have only single set bit of xor1 */
+    //    int set_bit_no;
 
-        int i;
-        int x = 0, y = 0;
+    //    int i;
+    //    int x = 0, y = 0;
 
-        xor1 = arr[0];
+    //    xor1 = arr[0];
 
-        /* Get the xor of all array elements */
-        for (i = 1; i < n; i++)
-            xor1 = xor1 ^ arr[i];
+    //    /* Get the xor of all array elements */
+    //    for (i = 1; i < n; i++)
+    //        xor1 = xor1 ^ arr[i];
 
-        /* XOR the previous result with numbers from 
-        1 to n*/
-        for (i = 1; i <= n; i++)
-            xor1 = xor1 ^ i;
+    //    /* XOR the previous result with numbers from 
+    //    1 to n*/
+    //    for (i = 1; i <= n; i++)
+    //        xor1 = xor1 ^ i;
 
-        /* Get the rightmost set bit in set_bit_no */
-        set_bit_no = xor1 & ~(xor1 - 1);
+    //    /* Get the rightmost set bit in set_bit_no */
+    //    set_bit_no = xor1 & ~(xor1 - 1);
 
-        /* Now divide elements in two sets by comparing
-        rightmost set bit of xor1 with bit at same 
-        position in each element. Also, get XORs of two
-        sets. The two XORs are the output elements.The 
-        following two for loops serve the purpose */
-        for (i = 0; i < n; i++)
-        {
-            if ((arr[i] & set_bit_no) != 0)
+    //    /* Now divide elements in two sets by comparing
+    //    rightmost set bit of xor1 with bit at same 
+    //    position in each element. Also, get XORs of two
+    //    sets. The two XORs are the output elements.The 
+    //    following two for loops serve the purpose */
+    //    for (i = 0; i < n; i++)
+    //    {
+    //        if ((arr[i] & set_bit_no) != 0)
 
-                /* arr[i] belongs to first set */
-                x = x ^ arr[i];
+    //            /* arr[i] belongs to first set */
+    //            x = x ^ arr[i];
 
-            else
+    //        else
 
-                /* arr[i] belongs to second set*/
-                y = y ^ arr[i];
-        }
-        for (i = 1; i <= n; i++)
-        {
-            if ((i & set_bit_no) != 0)
+    //            /* arr[i] belongs to second set*/
+    //            y = y ^ arr[i];
+    //    }
+    //    for (i = 1; i <= n; i++)
+    //    {
+    //        if ((i & set_bit_no) != 0)
 
-                /* i belongs to first set */
-                x = x ^ i;
+    //            /* i belongs to first set */
+    //            x = x ^ i;
 
-            else
+    //        else
 
-                /* i belongs to second set*/
-                y = y ^ i;
-        }
+    //            /* i belongs to second set*/
+    //            y = y ^ i;
+    //    }
 
-        /* *x and *y hold the desired output elements */
-        return new int[] { x, y };
-    }
-    #endregion
+    //    /* *x and *y hold the desired output elements */
+    //    return new int[] { x, y };
+    //}
+    //#endregion
 
-    #region Count inversion
+    //#region Count inversion
 
-    //Naive Solution S=>O(1) and T=>O(N^2)
-    //using two loops
+    ////Naive Solution S=>O(1) and T=>O(N^2)
+    ////using two loops
 
-    //Optimal Solution S=>O(1) and T=>O(N+M)
-    //using the merge sort 
+    ////Optimal Solution S=>O(1) and T=>O(N+M)
+    ////using the merge sort 
 
-    public long inversionCount(long[] arr, int N)
-    {
-        //Your Code Here
-        return MergeSort(arr, 0, N - 1);
-    }
-    static long Merge(long[] arr, int low, int mid, int high)
-    {
-        List<long> temp = new List<long>();
-        // Calculate the lengths of the two subarrays
-        int left = low;
-        int right = mid + 1;
+    //public long inversionCount(long[] arr, int N)
+    //{
+    //    //Your Code Here
+    //    return MergeSort(arr, 0, N - 1);
+    //}
+    //static long Merge(long[] arr, int low, int mid, int high)
+    //{
+    //    List<long> temp = new List<long>();
+    //    // Calculate the lengths of the two subarrays
+    //    int left = low;
+    //    int right = mid + 1;
 
-        long cnt = 0;
+    //    long cnt = 0;
 
-        while (left <= mid && right <= high)
-        {
-            if (arr[left] <= arr[right])
-            {
-                temp.Add(arr[left]);
-                left++;
-            }
-            else
-            {
-                temp.Add(arr[right]);
-                cnt += (mid - left + 1);
-                right++;
-            }
-        }
-        while (left <= mid)
-        {
-            temp.Add(arr[left]);
-            left++;
-        }
-        while (right <= high)
-        {
-            temp.Add(arr[right]);
-            right++;
-        }
-        for (int i = low; i <= high; i++)
-        {
-            arr[i] = temp[i - low];
-        }
-        return cnt;
-    }
+    //    while (left <= mid && right <= high)
+    //    {
+    //        if (arr[left] <= arr[right])
+    //        {
+    //            temp.Add(arr[left]);
+    //            left++;
+    //        }
+    //        else
+    //        {
+    //            temp.Add(arr[right]);
+    //            cnt += (mid - left + 1);
+    //            right++;
+    //        }
+    //    }
+    //    while (left <= mid)
+    //    {
+    //        temp.Add(arr[left]);
+    //        left++;
+    //    }
+    //    while (right <= high)
+    //    {
+    //        temp.Add(arr[right]);
+    //        right++;
+    //    }
+    //    for (int i = low; i <= high; i++)
+    //    {
+    //        arr[i] = temp[i - low];
+    //    }
+    //    return cnt;
+    //}
 
-    // Merge Sort function to sort the array and count reverse pairs
-    public long MergeSort(long[] arr, int low, int high)
-    {
-        long cnt = 0;
-        if (low >= high)
-        {
-            return cnt;
-        }
-        int mid = low + (high - low) / 2;
+    //// Merge Sort function to sort the array and count reverse pairs
+    //public long MergeSort(long[] arr, int low, int high)
+    //{
+    //    long cnt = 0;
+    //    if (low >= high)
+    //    {
+    //        return cnt;
+    //    }
+    //    int mid = low + (high - low) / 2;
 
-        // Recursively count reverse pairs in left and right halves
-        cnt += MergeSort(arr, low, mid);
-        cnt += MergeSort(arr, mid + 1, high);
+    //    // Recursively count reverse pairs in left and right halves
+    //    cnt += MergeSort(arr, low, mid);
+    //    cnt += MergeSort(arr, mid + 1, high);
 
-        // Merge the sorted halves and count reverse pairs
-        cnt += Merge(arr, low, mid, high);
-        return cnt;
-    }
+    //    // Merge the sorted halves and count reverse pairs
+    //    cnt += Merge(arr, low, mid, high);
+    //    return cnt;
+    //}
 
-    #endregion
-    #region 4Sum
+    //#endregion
+    //#region 4Sum
 
-    //Naive SOlution S=>O(1) and T=>O(N^4)
-    //using 4 loops 
+    ////Naive SOlution S=>O(1) and T=>O(N^4)
+    ////using 4 loops 
 
-    //Better Solution S=>O(N) and T=>O(N^3)
-    //using 3 loops and storing the element in map
-    //always remember only to store the elements between j and k in the map
+    ////Better Solution S=>O(N) and T=>O(N^3)
+    ////using 3 loops and storing the element in map
+    ////always remember only to store the elements between j and k in the map
 
-    //Optimal solution S=>O(1) and T=>O(N^3)
-    //using 2 loops and two pointer aproach.;
+    ////Optimal solution S=>O(1) and T=>O(N^3)
+    ////using 2 loops and two pointer aproach.;
 
-    public IList<IList<int>> FourSum(int[] nums, int target)
-    {
-        var ans = new List<IList<int>>();
-        Array.Sort(nums);
-        int n = nums.Length;
-        for (int i = 0; i < n; i++)
-        {
-            //skip duplicates
-            if (i > 0 && nums[i] == nums[i - 1])
-                continue;
-            for (int j = i + 1; j < n; j++)
-            {
-                if (j != i + 1 && nums[j] == nums[j - 1])
-                    continue;
-                int k = j + 1;
-                int l = n - 1;
-                while (k < l)
-                {
-                    long sum = (long)nums[i] + (long)nums[j] + (long)nums[k] + (long)nums[l];
-                    if (sum < target)
-                        k++;
-                    else if (sum > target)
-                        l--;
-                    else
-                    {
-                        ans.Add(new List<int>() { nums[i], nums[j], nums[k], nums[l] });
-                        l--;
-                        k++;
-                        while (k < l && nums[k] == nums[k - 1])
-                            k++;
-                        while (k < l && nums[l] == nums[l + 1])
-                            l--;
-                    }
-                }
-            }
-        }
-        return ans;
-    }
+    //public IList<IList<int>> FourSum(int[] nums, int target)
+    //{
+    //    var ans = new List<IList<int>>();
+    //    Array.Sort(nums);
+    //    int n = nums.Length;
+    //    for (int i = 0; i < n; i++)
+    //    {
+    //        //skip duplicates
+    //        if (i > 0 && nums[i] == nums[i - 1])
+    //            continue;
+    //        for (int j = i + 1; j < n; j++)
+    //        {
+    //            if (j != i + 1 && nums[j] == nums[j - 1])
+    //                continue;
+    //            int k = j + 1;
+    //            int l = n - 1;
+    //            while (k < l)
+    //            {
+    //                long sum = (long)nums[i] + (long)nums[j] + (long)nums[k] + (long)nums[l];
+    //                if (sum < target)
+    //                    k++;
+    //                else if (sum > target)
+    //                    l--;
+    //                else
+    //                {
+    //                    ans.Add(new List<int>() { nums[i], nums[j], nums[k], nums[l] });
+    //                    l--;
+    //                    k++;
+    //                    while (k < l && nums[k] == nums[k - 1])
+    //                        k++;
+    //                    while (k < l && nums[l] == nums[l + 1])
+    //                        l--;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    return ans;
+    //}
 
-    #endregion
+    //#endregion
 
-    #region flattening of linked list
-    public class NodeSpecial
-    {
-        public int data;
-        public NodeSpecial next;
-        public NodeSpecial bottom;
-        NodeSpecial(int x)
-        {
-            this.data = x;
-            this.next = null;
-            this.bottom = null;
-        }
-    }
+    //#region flattening of linked list
+    //public class NodeSpecial
+    //{
+    //    public int data;
+    //    public NodeSpecial next;
+    //    public NodeSpecial bottom;
+    //    NodeSpecial(int x)
+    //    {
+    //        this.data = x;
+    //        this.next = null;
+    //        this.bottom = null;
+    //    }
+    //}
 
-    //Optimal Solution S=>O(N for recursion) and T=>O(N)
-    //traversing to right and using mergesort logic
+    ////Optimal Solution S=>O(N for recursion) and T=>O(N)
+    ////traversing to right and using mergesort logic
 
         
-    public NodeSpecial MergeTwoList(NodeSpecial l1, NodeSpecial l2)
-    {
-        var temp = new NodeSpecial(-1);
-        var root = temp;
+    //public NodeSpecial MergeTwoList(NodeSpecial l1, NodeSpecial l2)
+    //{
+    //    var temp = new NodeSpecial(-1);
+    //    var root = temp;
 
-        while (l1 != null && l2 != null)
-        {
-            if (l1.data >= l2.data)
-            {
-                temp.bottom = l2;
-                l2 = l2.bottom;
-            }
-            else
-            {
-                temp.bottom = l1;
-                l1 = l1.bottom;
-            }
-            temp = temp.bottom;
-        }
-        if (l1 != null)
-            temp.bottom = l1;
-        if (l2 != null)
-            temp.bottom = l2;
-        return root.bottom;
-    }
+    //    while (l1 != null && l2 != null)
+    //    {
+    //        if (l1.data >= l2.data)
+    //        {
+    //            temp.bottom = l2;
+    //            l2 = l2.bottom;
+    //        }
+    //        else
+    //        {
+    //            temp.bottom = l1;
+    //            l1 = l1.bottom;
+    //        }
+    //        temp = temp.bottom;
+    //    }
+    //    if (l1 != null)
+    //        temp.bottom = l1;
+    //    if (l2 != null)
+    //        temp.bottom = l2;
+    //    return root.bottom;
+    //}
 
-    public NodeSpecial flatten(NodeSpecial head)
-    {
-        //your code here
-        if (head == null || head.next == null)
-            return head;
-        head.next = this.flatten(head.next);
-        head = this.MergeTwoList(head, head.next);
-        return head;
-    }
+    //public NodeSpecial flatten(NodeSpecial head)
+    //{
+    //    //your code here
+    //    if (head == null || head.next == null)
+    //        return head;
+    //    head.next = this.flatten(head.next);
+    //    head = this.MergeTwoList(head, head.next);
+    //    return head;
+    //}
 
-    #endregion
+    //#endregion
 
-    #region count number of subarray with xor k
-    //Naive Solution S=>O(1) and T=>O(N^3)
-    static long subarrayXor(int[] arr, int n, int m)
-    {
-        int cnt = 0;
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = i; j < n; j++)
-            {
-                var xor = 0;
-                for (int k = i; k < j; k++)
-                {
-                    xor = xor ^ arr[k];
-                    if (xor == m)
-                        cnt++;
-                }
-            }
-        }
-        return cnt;
-    }
+    //#region count number of subarray with xor k
+    ////Naive Solution S=>O(1) and T=>O(N^3)
+    //public long subarrayXor(int[] arr, int n, int m)
+    //{
+    //    int cnt = 0;
+    //    for (int i = 0; i < n; i++)
+    //    {
+    //        for (int j = i; j < n; j++)
+    //        {
+    //            var xor = 0;
+    //            for (int k = i; k < j; k++)
+    //            {
+    //                xor = xor ^ arr[k];
+    //                if (xor == m)
+    //                    cnt++;
+    //            }
+    //        }
+    //    }
+    //    return cnt;
+    //}
 
-    //Better Solution S=>O(1) and T=>O(N^2)
-    static long subarrayXorBetter(int[] arr,int n, int m)
-    {
-        int cnt = 0;
-        for(int i = 0; i < n; i++)
-        {
-            var xor = 0;
-            for(int j = i; j < n; j++)
-            {
-                xor = xor ^ arr[j];
-                if (xor == m)
-                    cnt++;
-            }
-        }
-        return cnt;
-    }
+    ////Better Solution S=>O(1) and T=>O(N^2)
+    //public long subarrayXorBetter(int[] arr,int n, int m)
+    //{
+    //    int cnt = 0;
+    //    for(int i = 0; i < n; i++)
+    //    {
+    //        var xor = 0;
+    //        for(int j = i; j < n; j++)
+    //        {
+    //            xor = xor ^ arr[j];
+    //            if (xor == m)
+    //                cnt++;
+    //        }
+    //    }
+    //    return cnt;
+    //}
 
-    //Optimal Solution S=>O(N) and T=>O(1)
-    //using maths 
-    static long subarrayXorOptimal(int[] arr, int n, int m)
-    {
-        Dictionary<int, int> map = new Dictionary<int, int>();
-        int cnt = 0;
-        map.Add(0, 1);
-        var xor = 0;
-        for(int i = 0; i < n; i++)
-        {
-            xor = xor ^ arr[i];
-            if (map.ContainsKey(xor ^ m))
-                cnt += map[xor ^ m];
-            if (map.ContainsKey(arr[i]))
-                map[arr[i]] += 1;
-            else
-                map.Add(arr[i], 1);
-        }
-        return cnt;
-     }
+    ////Optimal Solution S=>O(N) and T=>O(1)
+    ////using maths 
+    //public long subarrayXorOptimal(int[] arr, int n, int m)
+    //{
+    //    Dictionary<int, int> map = new Dictionary<int, int>();
+    //    int cnt = 0;
+    //    map.Add(0, 1);
+    //    var xor = 0;
+    //    for(int i = 0; i < n; i++)
+    //    {
+    //        xor = xor ^ arr[i];
+    //        if (map.ContainsKey(xor ^ m))
+    //            cnt += map[xor ^ m];
+    //        if (map.ContainsKey(arr[i]))
+    //            map[arr[i]] += 1;
+    //        else
+    //            map.Add(arr[i], 1);
+    //    }
+    //    return cnt;
+    // }
 
-    #endregion
-
+    //#endregion
 }

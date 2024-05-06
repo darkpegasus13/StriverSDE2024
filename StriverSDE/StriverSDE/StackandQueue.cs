@@ -61,6 +61,73 @@ namespace StriverSDE
         }
         #endregion
 
+        #region Celebrity problem
+        //Naive Solution S=>O(2N) and T=>O(N^2)
+        //using two hash maps
+
+        public int celebrity(int[,] M, int n)
+        {
+            //Your code here
+            if (n == 1)
+                return M[0, 0] == 0 ? 0 : -1;
+            Dictionary<int, int> visited = new Dictionary<int, int>();
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    //skipping self knowing i.e a person knows himself
+                    if (i == j)
+                        continue;
+                    if (M[i, j] == 1)
+                    {
+                        if (!visited.ContainsKey(i))
+                            visited.Add(i, 1);
+                        if (dict.ContainsKey(j))
+                            dict[j]++;
+                        else
+                            dict[j] = 1;
+                    }
+                    if (dict.ContainsKey(j) && dict[j] == n - 1 &&
+                    !visited.ContainsKey(j))
+                        return j;
+                }
+            }
+            return -1;
+        }
+
+        //Optimal Solution S=>O() and T=>O(N)
+        //
+
+        public int CelebrityOptimal(int[,] M, int n)
+        {
+            Stack<int> st = new Stack<int>();
+            for (int i = 0; i < n; i++)
+            {
+                st.Push(i);
+            }
+            while (st.Count >= 2)
+            {
+                var a = st.Pop();
+                var b = st.Pop();
+                if (M[a, b] == 1)
+                    st.Push(b);
+                else
+                    st.Push(a);
+            }
+            int pot = st.Pop();
+            for (int i = 0; i < n; i++)
+            {
+                if (i != pot)
+                {
+                    if (M[i, pot] == 0 || M[pot, i] == 1)
+                        return -1;
+                }
+            }
+            return pot;
+        }
+        #endregion
+
         #region Sort A Stack Using Recursion
 
         public void sortedInsert(Stack<int> s, int x)
@@ -101,6 +168,7 @@ namespace StriverSDE
                 sortedInsert(s, x);
             }
         }
+
         #endregion
 
         #region online stock span
@@ -213,7 +281,57 @@ namespace StriverSDE
         }
 
         #endregion
-        
+
+        #region Sliding window maximum
+
+        //Naive Solution S=>O(1) and T=>O(N^2)
+        //calculating for every k window for max
+
+        //Optimal Solution S=>O(1) and T=>O(N)
+        //using linked list or deque
+
+        public int[] MaxSlidingWindow(int[] nums, int k)
+        {
+            if (k == 0) return nums;
+            int len = nums.Length;
+            int maxArrayLen = len - k + 1;
+            int[] ans = new int[maxArrayLen];
+
+            LinkedList<int> q = new LinkedList<int>();
+
+            // Queue stores indices of array, and 
+            // values are in decreasing order.
+            // So, the first node in queue is the max in window
+            for (int i = 0; i < len; i++)
+            {
+                // 1. remove element from head until first number within window
+                if (q.Count > 0 && q.First.Value + k <= i)
+                {
+                    q.RemoveFirst();
+                }
+
+                // 2. before inserting i into queue, remove from the tail of the
+                // queue indices with smaller value they array[i]
+                while (q.Count > 0 && nums[q.Last.Value] <= nums[i])
+                {
+                    q.RemoveLast();
+                }
+
+                q.AddLast(i);
+
+                // 3. set the max value in the window (always the top number in
+                // queue) as the ans array will contain ans for k window it will be less in number
+                int index = i + 1 - k;
+                if (index >= 0)
+                {
+                    ans[index] = nums[q.First.Value];
+                }
+            }
+            return ans;
+        }
+
+        #endregion
+
     }
     #region Implement Stack using Array
     class Stack
@@ -692,6 +810,169 @@ namespace StriverSDE
         }
     }
 
+    #endregion
+
+    #region LRU cache
+
+    //Optimal Solution S=>O(1) and T=>O(N)
+    //using a doubly linked list
+    public class LRUCache
+    {
+        public class Node
+        {
+            public Node prev;
+            public Node next;
+            public int key;
+            public int value;
+            public Node(int _key, int _value)
+            {
+                key = _key;
+                value = _value;
+            }
+        }
+        public Node head = new Node(0, 0);
+        public Node tail = new Node(0, 0);
+        public Dictionary<int, Node> map = new Dictionary<int, Node>();
+        public int _capacity;
+        public LRUCache(int capacity)
+        {
+            _capacity = capacity;
+            head.next = tail;
+            tail.prev = head;
+        }
+
+        public int Get(int key)
+        {
+            if (map.ContainsKey(key))
+            {
+                Node ex = map[key];
+                Remove(ex);
+                Insert(ex);
+                return ex.value;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public void Put(int key, int value)
+        {
+            if (map.ContainsKey(key))
+            {
+                Remove(map[key]);
+            }
+            if (map.Count == _capacity)
+            {
+                Remove(tail.prev);
+            }
+            Insert(new Node(key, value));
+        }
+
+        public void Remove(Node node)
+        {
+            map.Remove(node.key);
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+
+        public void Insert(Node node)
+        {
+            map.Add(node.key, node);
+            node.next = head.next;
+            node.next.prev = node;
+            head.next = node;
+            node.prev = head;
+        }
+    }
+
+    #endregion
+
+    #region LFU cache
+    public class LFUCache
+    {
+        public class Node
+        {
+            public Node prev;
+            public Node next;
+            public int key;
+            public int value;
+            public int freq;
+            public Node(int _key, int _value, int _freq = 1)
+            {
+                key = _key;
+                value = _value;
+                freq = _freq;
+            }
+        }
+        public Node head = new Node(-1, 0);
+        public Node tail = new Node(-1, 0);
+        public Dictionary<int, Node> map = new Dictionary<int, Node>();
+        public int _capacity;
+        public LFUCache(int capacity)
+        {
+            _capacity = capacity;
+            head.next = tail;
+            tail.prev = head;
+        }
+
+        public int Get(int key)
+        {
+            if (map.ContainsKey(key))
+            {
+                Node ex = map[key];
+                ex.freq++;
+                Remove(ex);
+                Insert(ex);
+                return ex.value;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public void Put(int key, int value)
+        {
+            int freq = 1;
+            if (map.ContainsKey(key))
+            {
+                freq += map[key].freq;
+                Remove(map[key]);
+            }
+            if (map.Count == _capacity)
+            {
+                Remove(tail.prev);
+            }
+            Insert(new Node(key, value, freq));
+        }
+
+        public void Remove(Node node)
+        {
+            map.Remove(node.key);
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+
+        public void Insert(Node node)
+        {
+            bool flag = false;
+            map.Add(node.key, node);
+            var curr = head.next == tail ? head : head.next;
+            while (curr != head && curr != tail && curr.freq > node.freq)
+            {
+                flag = true;
+                curr = curr.next;
+            }
+            //going to insert the new element before  
+            if (curr != head)
+                curr = curr.prev;
+            node.next = curr.next;
+            node.next.prev = node;
+            curr.next = node;
+            node.prev = curr;
+        }
+    }
     #endregion
 
 

@@ -355,7 +355,7 @@ namespace StriverSDE
                 + UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1, curr.Item2 + 1), target, ans);
         }
 
-        //Better Solution
+        //Better Solution 
         //using DP memoization
 
         public int UniquePathsHelper(int m, int n, Tuple<int, int> curr, Tuple<int, int> target, int[][] matrix, int ans = 0
@@ -371,6 +371,118 @@ namespace StriverSDE
                 return matrix[curr.Item1][curr.Item2] = UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1 + 1, curr.Item2), target, matrix, ans)
                 + UniquePathsHelper(m, n, new Tuple<int, int>(curr.Item1, curr.Item2 + 1), target, matrix, ans);
         }
-        #endregion 
+        #endregion
+
+        #region Sudoku solver
+
+        //Naive SOlution S=>O(1) and T=>O(N*N)
+        //using recursion
+        public bool Solve(char[][] board)
+        {
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board[0].Length; j++)
+                {
+                    if (board[i][j] == '.')
+                    {
+                        //'10' is not possible. We can iterate over char in c#
+                        for (char k = '1'; k <= '9'; k++)
+                        {
+                            if (IsValid(board, k, i, j))
+                            {
+                                board[i][j] = k;
+
+                                if (Solve(board))
+                                    return true;
+                                else
+                                    board[i][j] = '.';
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        public bool IsValid(char[][] board, char k, int i, int j)
+        {
+            for (int cnt = 0; cnt < 9; cnt++)
+            {
+                if (board[i][cnt] == k)
+                    return false;
+                if (board[cnt][j] == k)
+                    return false;
+                //checking in 3X3 section
+                if (board[3 * (i / 3) + cnt / 3][3 * (j / 3) + cnt % 3] == k)
+                    return false;
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region N Queens
+        //see after wards important question 
+        //not working in leet code
+        bool solveNQUtil(int[,] board, int col,int N)
+        {
+            
+            // Base case: If all queens are placed
+            // then return true
+            if (col >= N)
+                return true;
+
+            // Consider this column and try placing
+            // this queen in all rows one by one
+            for (int i = 0; i < N; i++)
+            {
+                // Check if the queen can be placed on
+                // board[i,col]
+                if (isSafe(board, i, col,N))
+                {
+                    // Place this queen in board[i,col]
+                    board[i, col] = 1;
+
+                    // Recur to place rest of the queens
+                    if (solveNQUtil(board, col + 1,N) == true)
+                        return true;
+
+                    // If placing queen in board[i,col]
+                    // doesn't lead to a solution then
+                    // remove queen from board[i,col]
+                    board[i, col] = 0; // BACKTRACK
+                }
+            }
+
+            // If the queen can not be placed in any row in
+            // this column col, then return false
+            return false;
+        }
+        
+        bool isSafe(int[,] board, int row, int col,int N)
+        {
+            int i, j;
+
+            // Check this row on left side
+            for (i = 0; i < col; i++)
+                if (board[row, i] == 1)
+                    return false;
+
+            // Check upper diagonal on left side
+            for (i = row, j = col; i >= 0 &&
+                 j >= 0; i--, j--)
+                if (board[i, j] == 1)
+                    return false;
+
+            // Check lower diagonal on left side
+            for (i = row, j = col; j >= 0 &&
+                          i < N; i++, j--)
+                if (board[i, j] == 1)
+                    return false;
+
+            return true;
+        }
+
+        #endregion
     }
 }

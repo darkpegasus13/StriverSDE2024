@@ -205,5 +205,89 @@ namespace StriverSDE
         }
 
         #endregion
+
+        #region Return first index of occurence 
+
+        //Naive Solution S=>O(1) and T=>O(N^2)
+        //using two loops
+
+        //Better solution S=>O(1) and T=>O(~N*M) performs better on average(N+M)
+        //comparing the size and first character and then 
+        //checking
+
+        public int StrStr(string haystack, string needle)
+        {
+            for (int i = 0; i < haystack.Length; i++)
+            {
+                if (haystack[i] == needle[0] && i + needle.Length - 1 < haystack.Length)
+                {
+                    bool flag = false;
+                    for (int j = 0; j < needle.Length; j++)
+                    {
+                        if (haystack[i + j] != needle[j])
+                            flag = true;
+                    }
+                    if (!flag)
+                        return i;
+                }
+            }
+            return -1;
+        }
+
+        //Optimal Solution S=>O(M) and T=>O(N+M)
+        //using KMP algo
+
+        public int StrStrOptimal(string haystack, string needle)
+        {
+            if (needle == "")
+                return 0;
+            int[] LPS = new int[needle.Length];
+            int prev_LPS = 0;
+            int i = 1;
+            while (i < needle.Length)
+            {
+                if (needle[i] == needle[prev_LPS])
+                {
+                    LPS[i] += prev_LPS + 1;
+                    prev_LPS += 1;
+                    i += 1;
+                }
+                else if (prev_LPS == 0)
+                {
+                    LPS[i] = 0;
+                    i += 1;
+                }
+                else
+                {
+                    prev_LPS = LPS[prev_LPS - 1];
+                }
+            }
+            i = 0;
+            int j = 0;
+            while (i < haystack.Length)
+            {
+                if (haystack[i] == needle[j])
+                {
+                    i += 1;
+                    j += 1;
+                }
+                else
+                {
+                    if (j == 0)
+                    {
+                        i += 1;
+                    }
+                    else
+                    {
+                        j = LPS[j - 1];
+                    }
+                }
+                if (j == needle.Length)
+                    return i - needle.Length;
+            }
+            return -1;
+        }
+
+        #endregion
     }
 }
