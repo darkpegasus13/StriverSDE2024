@@ -48,7 +48,7 @@ namespace StriverSDE
             //lf.Put(3, 12);
             //lf.Get(2);
             //stq.celebrityOptimal(new int[3, 3] { {0, 1 ,0 }, {0, 0 ,0 }, {0, 1, 0 } }, 3);
-            stq.MaxSlidingWindow(new int[] {1, 3, -1, -3, 5, 3, 6, 7 },3);
+            //stq.MaxSlidingWindow(new int[] {1, 3, -1, -3, 5, 3, 6, 7 },3);
 
             #endregion
 
@@ -95,8 +95,9 @@ namespace StriverSDE
             #endregion
 
             #region String
-            //Strings s = new Strings();
+            Strings s = new Strings();
             //s.LongestPalindromeSubstring("babad");
+            s.CompareVersionOptimal("1.01","1.1");
             #endregion
 
             #region Heap
@@ -126,6 +127,14 @@ namespace StriverSDE
             //{
             //    Console.WriteLine(k.Add(i));
             //}
+            Binary_Tree bt = new Binary_Tree();
+            TreeNode tree = new TreeNode(1);
+            tree.right = new TreeNode(5);
+            tree.left = new TreeNode(2);
+            tree.right.right = new TreeNode(6);
+            tree.left.left = new TreeNode(3);
+            tree.left.right = new TreeNode(4);
+            bt.Flatten(tree);
 
             #endregion
             Console.ReadLine();

@@ -20,10 +20,28 @@ namespace StriverSDE
     }
     class Binary_Tree
     {
-        #region PreOrder Traversal
-        //same for inorder, postorder traversal just change the positioning
-        //of root.val
-        public IList<int> PreorderTraversal(TreeNode root)
+        #region Maximum Sum Path
+
+        public int MaxPathSum(TreeNode root)
+        {
+            int Maxi = int.MinValue;
+            MaxPathSumHelper(root, ref Maxi);
+            return Maxi;
+        }
+        public int MaxPathSumHelper(TreeNode root, ref int maxi)
+        {
+            if (root == null)
+                return 0;
+            var leftSum = Math.Max(0, MaxPathSumHelper(root.left, ref maxi));
+            var rightSum = Math.Max(0, MaxPathSumHelper(root.right, ref maxi));
+            maxi = Math.Max(maxi, leftSum + rightSum + root.val);
+            return root.val + Math.Max(leftSum < 0 ? 0 : leftSum, rightSum < 0 ? 0 : rightSum);
+        }
+            #endregion
+            #region PreOrder Traversal
+            //same for inorder, postorder traversal just change the positioning
+            //of root.val
+            public IList<int> PreorderTraversal(TreeNode root)
         {
             var ans = new List<int>();
             PreorderHelper(root, ans);
@@ -231,12 +249,13 @@ namespace StriverSDE
             }
         }
         #endregion
+        
 
-        #region vertical level order traversal
+            #region vertical level order traversal
 
-        //S=>O(N) and T=>O(N*logN*logN*LogN)
-        //by assuming coordinates for given node (0,1,1,-2 etc.)
-        public IList<IList<int>> VerticalTraversal(TreeNode root)
+            //S=>O(N) and T=>O(N*logN*logN*LogN)
+            //by assuming coordinates for given node (0,1,1,-2 etc.)
+            public IList<IList<int>> VerticalTraversal(TreeNode root)
         {
             var ans = new List<IList<int>>();
             Queue<Tuple<TreeNode, int, int>> q = new Queue<Tuple<TreeNode, int, int>>();
@@ -687,6 +706,69 @@ namespace StriverSDE
 
         #endregion
 
+        #region flatten binary tree to linked list in preorder
+        //revisit the question leetcode problem has made it complex
+        public void Flatten(TreeNode root)
+        {
+            if (root == null)
+            {
+                return;
+            }
+
+            flatten(root);
+        }
+
+        private TreeNode flatten(TreeNode root)
+        {
+            if (root.left == null && root.right == null)
+                return root;
+
+            if (root.left == null || root.right == null)
+            {
+                if (root.right == null)
+                {
+                    moveLeftToRight(root);
+                }
+
+                return flatten(root.right);
+            }
+
+            TreeNode lastLeft = flatten(root.left);
+            TreeNode lastRight = flatten(root.right);
+            TreeNode tempRight = root.right;
+
+            moveLeftToRight(root);
+            lastLeft.right = tempRight;
+
+            return lastRight;
+        }
+
+        private void moveLeftToRight(TreeNode root)
+        {
+            root.right = root.left;
+            root.left = null;
+        }
+
+        //using stack and DFS
+
+        //public void Flatten(TreeNode root)
+        //{
+        //    if (root == null) return;
+        //    FlattenAndGetEndNode(root);
+        //}
+
+        //public TreeNode FlattenAndGetEndNode(TreeNode root)
+        //{
+        //    var leftEndNode = root.left == null ? root : FlattenAndGetEndNode(root.left);
+        //    var rightEndNode = root.right == null ? leftEndNode : FlattenAndGetEndNode(root.right);
+        //    leftEndNode.right = root.right;
+        //    if (root.left != null) root.right = root.left;
+        //    root.left = null;
+        //    return rightEndNode;
+        //}
+
+        //using morris traversal
+    }
+    #endregion
 
     }
-}
