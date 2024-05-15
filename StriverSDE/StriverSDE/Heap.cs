@@ -157,7 +157,6 @@ namespace StriverSDE
             //    return ans[k];
             int n = nums.Length;
             buildMaxHeap(ans, ans.Count);
-            List<int> copy = new List<int>();
             for (int i = 0; i < k - 1; i++)
                 DeleteMaxHeap(heap[0], ans);
             return heap[0];

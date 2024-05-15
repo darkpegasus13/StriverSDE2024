@@ -12,12 +12,13 @@ namespace StriverSDE
         static void Main(string[] args)
         {
             #region Array
-            //ArrayComp arr = new ArrayComp();
+            ArrayComp arr = new ArrayComp();
             //arr.MaxSubArrayPrintRange(new int [] { 1, 2, 3, -2, 5 });
             //arr.pow(2,-2);
             //arr.SubarraySum(new int[]{ 9,-3,3,-1,6,-5},0);
             //arr.Merge(new int[] { 5,6,4,0,0,0},3,new int[] {3,2,4 },3);
             //arr.FourSum(new int[] {1, 0, -1, 0, -2, 2}, 0);
+            arr.countDistinct(new int[] { 1, 2, 1, 3, 4, 2, 3 }, 7, 4);
             #endregion
 
             #region LL
@@ -80,7 +81,8 @@ namespace StriverSDE
             //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
             //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
             //});
-   
+            recur.FloodFill(new int[][]{new int[]{ 0,0, 0 },
+            new int[]{ 0, 0, 0 } },0,0,0);
 
             #endregion
 
@@ -127,15 +129,15 @@ namespace StriverSDE
             //{
             //    Console.WriteLine(k.Add(i));
             //}
-            Binary_Tree bt = new Binary_Tree();
-            TreeNode tree = new TreeNode(1);
-            tree.right = new TreeNode(5);
-            tree.left = new TreeNode(2);
-            tree.right.right = new TreeNode(6);
-            tree.left.left = new TreeNode(3);
-            tree.left.right = new TreeNode(4);
-            bt.Flatten(tree);
-
+            //Binary_Tree bt = new Binary_Tree();
+            //TreeNode tree = new TreeNode(1);
+            //tree.left = new TreeNode(2);
+            //tree.right = new TreeNode(3);
+            //tree.right.left = new TreeNode(4);
+            //tree.right.right = new TreeNode(5);
+            ////bt.Flatten(tree);
+            //var ans = bt.serialize(tree);
+            //bt.deserialize(ans);
             #endregion
             Console.ReadLine();
         }

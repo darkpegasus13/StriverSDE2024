@@ -76,6 +76,139 @@ namespace StriverSDE
         }
         #endregion
 
+        #region Serialise and Deserialise a Binary Tree
+
+        public string serialize(TreeNode root)
+        {
+            var ansList = new List<int>();
+            if (root == null)
+                return "";
+            Queue<TreeNode> q = new Queue<TreeNode>();
+            q.Enqueue(root);
+            while (q.Count() != 0)
+            {
+
+                int c = q.Count();
+                for (int i = 0; i < c; i++)
+                {
+                    var temp = q.Dequeue();
+                    if (temp != null)
+                    {
+                        q.Enqueue(temp.left);
+                        q.Enqueue(temp.right);
+                    }
+                    ansList.Add(temp == null ? -1 : temp.val);
+                }
+            }
+            StringBuilder s = new StringBuilder("");
+            foreach (var j in ansList)
+            {
+                s.Append((s.Length == 0 ? "" : ",") + (j == -1 ? "#" : j.ToString()));
+            }
+            return s.ToString();
+        }
+
+        // decodes your encoded data to tree.
+        // not wokring pls check afterwards
+        public TreeNode deserialize(string data)
+        {
+            if (data == string.Empty)
+                return null;
+            Queue<TreeNode> q = new Queue<TreeNode>();
+            string[] values = data.Split(',');
+            TreeNode root = new TreeNode(Convert.ToInt32(values[0]));
+            q.Enqueue(root);
+            for (int i = 1; i < values.Length; i++)
+            {
+                TreeNode parent = q.Dequeue();
+                if (!values[i].Equals("#"))
+                {
+                    TreeNode left = new TreeNode(Convert.ToInt32(values[i]));
+                    parent.left = left;
+                    q.Enqueue(left);
+                }
+                if (!values[++i].Equals("#"))
+                {
+                    TreeNode right = new TreeNode(Convert.ToInt32(values[i]));
+                    parent.right = right;
+                    q.Enqueue(right);
+                }
+            }
+            return root;
+        }
+
+        #endregion
+
+        #region BST Iterator
+
+        //Naive Solution S=>O(N) and T=>O(1)
+        //we can store the BST inorder in an array
+        //and return.
+
+        //Optimal Solution S=>O(H) and T=>O(1)
+        //using a stack and storing the leftmost side 
+        //of the tree
+        public class BSTIterator
+        {
+            Stack<TreeNode> st = new Stack<TreeNode>();
+            public BSTIterator(TreeNode root)
+            {
+                BSTIteratorHelper(root);
+            }
+
+            public void BSTIteratorHelper(TreeNode root)
+            {
+                var temp = root;
+                //putting the leftmost elements
+                while (temp != null)
+                {
+                    st.Push(temp);
+                    temp = temp.left;
+                }
+            }
+
+            public int Next()
+            {
+                var temp = st.Pop();
+                if (temp.right != null)
+                    BSTIteratorHelper(temp.right);
+                return temp.val;
+            }
+
+            public bool HasNext()
+            {
+                return !(st.Count() == 0);
+            }
+        }
+
+        #endregion
+
+        #region Size of largest BST in a BTree
+        //Naive Solution S=>O(1) and T=>O(N^2)
+        //using the validate bst method on every node and finding number of nodes 
+        //in a given node as root
+
+        //Optimal solution S=>O(1) and T=>O(N)
+        //Traverrsing the tree and calculating the smallest in left side
+        //and largest in right side.
+        public Tuple<int, int, int> LargestBSTHelper(TreeNode root)
+        {
+            if (root == null)
+                return new Tuple<int, int, int>(0, int.MaxValue, int.MinValue);
+            Tuple<int, int, int> left = LargestBSTHelper(root.left);
+            Tuple<int, int, int> right = LargestBSTHelper(root.right);
+
+            if (left.Item3 < root.val && root.val < right.Item2)
+            {
+                return new Tuple<int, int, int>(left.Item1 + right.Item1 + 1, Math.Min(root.val, left.Item2),
+                    Math.Max(root.val, right.Item3));
+            }
+
+            return new Tuple<int, int, int>(Math.Max(left.Item1, right.Item1), int.MinValue, int.MaxValue);
+        }
+
+        #endregion
+
         #region Validate BST
 
         //Naive Solution S=>O(N) and T=>O(N)

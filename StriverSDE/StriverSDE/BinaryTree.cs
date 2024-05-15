@@ -173,6 +173,26 @@ namespace StriverSDE
         }
 
         #endregion
+        #region Flatten a Binary tree to Linked List
+
+        //Optimal Solution S=>O(1) and T=>O(N)
+        //using reverse postorder traversal
+
+        TreeNode prev = null;
+        public void FlattentoLL(TreeNode root)
+        {
+
+            if (root == null)
+                return;
+            //custom traversal reverse postorder
+            FlattentoLL(root.right);
+            FlattentoLL(root.left);
+            root.right = prev;
+            root.left = null;
+            prev = root;
+        }
+
+        #endregion
 
         #region Bottom/Top View Of Binary Tree
 
@@ -410,9 +430,10 @@ namespace StriverSDE
                            DepthOfTreeRecur(root.right));
         }
         #endregion
+        
 
         #region Diameter of a Binary Tree
-        
+
         //Naive Solution S=>O(N) and T=>O(N^2)
         //canculating the depth of trees and calculating
         public int diameterHelper(TreeNode root)
@@ -441,6 +462,70 @@ namespace StriverSDE
         //Optimal Approach T=>O(N) and S=>O(1)
         //using calculating height in same step
         //see implementation afterwards
+
+        #endregion
+
+        #region Implement children sum property
+
+        //Optimal Solution S=>O(N due to recursion) and T=>O(N)
+        //by using recursion and backtracking
+
+        public TreeNode isSumProperty(TreeNode root)
+        {
+            //code here
+            isSumPropertyHelper(root);
+            return root;
+        }
+        public void isSumPropertyHelper(TreeNode root)
+        {
+            //code here
+            if (root == null)
+                return;
+            int child = 0;
+            if (root.left != null)
+                child += root.left.val;
+            if (root.right != null)
+                child += root.right.val;
+            if (child >= root.val)
+                root.val = child;
+            else
+            {
+                if (root.left != null)
+                    root.left.val = root.val;
+                if (root.right != null)
+                    root.right.val = root.val;
+            }
+            isSumPropertyHelper(root.left);
+            isSumPropertyHelper(root.right);
+            int tot = 0;
+            if (root.left != null)
+                tot += root.left.val;
+            if (root.right != null)
+                tot += root.right.val;
+            if (root.left != null || root.right != null)
+                root.val = tot;
+        }
+
+        #endregion
+
+        #region Check whether children check policy satisfied
+
+        public int isSumProperty2(TreeNode root)
+        {
+            //code here
+            return isSumPropertyHelper2(root) ? 1 : 0;
+
+        }
+        public bool isSumPropertyHelper2(TreeNode root)
+        {
+            //code here
+            if (root == null || (root.right == null && root.left == null))
+                return true;
+            if (root.val != (root.right == null ? 0 : root.right.val) +
+                        (root.left == null ? 0 : root.left.val))
+                return false;
+            return isSumPropertyHelper2(root.left) && isSumPropertyHelper2(root.right);
+        }
 
         #endregion
 
@@ -636,6 +721,42 @@ namespace StriverSDE
         }
         #endregion
 
+        #region contruct bt from pre and inorder
+        //can be implemented for post as well just take 
+        //element frm last in postorder array
+
+        //Optimal Solution S=>O(N) and T=>O(2N)
+        //using recurison and four pointers 2 on pre and 2 in inor
+
+        public TreeNode BuildTree(int[] preorder, int[] inorder)
+        {
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+            //saving all the preorder into map with indexes
+            for (int i = 0; i < inorder.Length; i++)
+            {
+                dict.Add(inorder[i], i);
+            }
+            var root = BuildTreeHelper(preorder, inorder, 0, preorder.Length - 1, 0, inorder.Length - 1, dict);
+            return root;
+        }
+
+        public TreeNode BuildTreeHelper(int[] preorder, int[] inorder, int preStart, int preEnd,
+            int inStart, int inEnd, Dictionary<int, int> dict)
+        {
+            if (preStart > preEnd || inStart > inEnd)
+                return null;
+            TreeNode root = new TreeNode(preorder[preStart]);
+            int inRoot = dict[root.val];
+            int numsLeft = inRoot - inStart;
+            root.left = BuildTreeHelper(preorder, inorder, preStart + 1, preStart + numsLeft,
+                inStart, inRoot - 1, dict);
+            root.right= BuildTreeHelper(preorder, inorder, preStart +numsLeft+ 1,
+                preEnd, inRoot+1, inEnd, dict);
+            return root;
+        }
+
+        #endregion
+
         #region Lowest Common Ancestor
 
         //Naive Solution S=>O(N+M) and T=O(N+M) n and m are path for the 
@@ -770,5 +891,4 @@ namespace StriverSDE
         //using morris traversal
     }
     #endregion
-
-    }
+}

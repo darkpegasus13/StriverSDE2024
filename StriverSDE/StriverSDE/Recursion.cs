@@ -484,5 +484,53 @@ namespace StriverSDE
         }
 
         #endregion
+
+        #region Flood Fill
+        public int[][] FloodFill(int[][] image, int sr, int sc, int color)
+        {
+            //creates a deep copy
+            int[][] visited_matrix = image.Select(x => x.ToArray()).ToArray();
+            FloodFillHelper(image, sr, sc, color, image[sr][sc], visited_matrix);
+            return image;
+        }
+
+        public void FloodFillHelper(int[][] image, int sr, int sc, int color, int initialcolor,
+            int[][] visiteMatrix)
+        {
+            if (sc >= image[0].Length || sr >= image.Length)
+                return;
+            //self
+            image[sr][sc] = color;
+            visiteMatrix[sr][sc] = -1;
+            //top
+            if (sr - 1 >= 0 && image[sr - 1][sc] == initialcolor && visiteMatrix[sr - 1][sc] != -1)
+            {
+                image[sr - 1][sc] = color;
+                visiteMatrix[sr - 1][sc] = -1;
+                FloodFillHelper(image, sr - 1, sc, color, initialcolor, visiteMatrix);
+            }
+            //bottom
+            if (sr + 1 < image.Length && image[sr + 1][sc] == initialcolor && visiteMatrix[sr + 1][sc] != -1)
+            {
+                image[sr + 1][sc] = color;
+                visiteMatrix[sr + 1][sc] = -1;
+                FloodFillHelper(image, sr + 1, sc, color, initialcolor, visiteMatrix);
+            }
+            //left
+            if (sc - 1 >= 0 && image[sr][sc - 1] == initialcolor && visiteMatrix[sr][sc - 1] != -1)
+            {
+                image[sr][sc - 1] = color;
+                visiteMatrix[sr][sc - 1] = -1;
+                FloodFillHelper(image, sr, sc - 1, color, initialcolor, visiteMatrix);
+            }
+            //right
+            if (sc + 1 < image[0].Length && image[sr][sc + 1] == initialcolor && visiteMatrix[sr][sc + 1] != -1)
+            {
+                image[sr][sc + 1] = color;
+                visiteMatrix[sr][sc + 1] = -1;
+                FloodFillHelper(image, sr, sc + 1, color, initialcolor, visiteMatrix);
+            }
+        }
+        #endregion
     }
 }

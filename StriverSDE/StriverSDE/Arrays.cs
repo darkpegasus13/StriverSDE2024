@@ -386,6 +386,54 @@ public class ArrayComp
     }
     #endregion
 
+    #region Distinct numbers in window k
+
+    //Naive Solution S=>O(1) and T=>O(n*K^2)
+    //using two loops and calculating
+
+    //Optimal Solution
+    //using maps
+
+    public List<int> countDistinct(int[] arr, int n, int k)
+    {
+        List<int> ans = new List<int>();
+        Dictionary<int, int> dict = new Dictionary<int, int>();
+        for(int i = 0; i < k; i++)
+        {
+            if (dict.ContainsKey(arr[i]))
+                dict[arr[i]] += 1;
+            else
+                dict.Add(arr[i], 1);
+        }
+        //by using count we are eleminating the calls
+        //to count the dict again and again
+        int count = dict.Count();
+        ans.Add(count);
+        for(int i = 0; i < n-k; i++)
+        {
+            dict[arr[i]]--;
+            if (dict[arr[i]] == 0)
+                    count--;
+            if (dict.ContainsKey(arr[k + i]))
+            {
+                //only increasing when the element was not present
+                //already in the window
+                if (dict[arr[k + i]] == 0)
+                    count++;
+                dict[arr[k + i]] += 1;
+            }
+            else
+            {
+                dict.Add(arr[k + i], 1);
+                count++;
+            }
+            ans.Add(count);
+        }
+        return ans;
+    }
+
+    #endregion
+
     #region Trapping Rain Water
 
     //Naive solution S=>O(1) and T+>O(N^2)
