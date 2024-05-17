@@ -218,5 +218,76 @@ namespace StriverSDE
         }
         #endregion
 
+        #region Maximum xor of numbers from same arrays/ two arrays/ or similar questions
+
+        //Naive SOlution S=>O(1) and T=>O(N*M)
+        //by xoring every element and savin the greatest
+
+        //Optimal Solution S=>O(32N) ant T=>O(32N+32M)
+        //using trie ds
+        //please optimise further the bit step and others can be optimised
+
+        class TrieNodeXor
+        {
+            public TrieNodeXor[] children = new TrieNodeXor[2];
+
+            // isEndOfWord is true if the node represents
+            // end of a word
+            public bool isEndOfWord;
+
+            public TrieNodeXor()
+            {
+                isEndOfWord = false;
+                for (int i = 0; i < 2; i++)
+                    children[i] = null;
+            }
+        };
+
+        public int FindMaximumXOR(int[] nums)
+        {
+            TrieNodeXor trie = new TrieNodeXor();
+            int ans = int.MinValue;
+            //adding in trie
+            foreach (int i in nums)
+            {
+                var curr = trie;
+                string binary = ConverTO32BitString(Convert.ToString(i, 2));
+                foreach (char c in binary)
+                {
+                    if (curr.children[c - '0'] == null)
+                        curr.children[c - '0'] = new TrieNodeXor();
+                    curr = curr.children[c - '0'];
+                }
+            }
+            //traversing
+            foreach (int i in nums)
+            {
+                string ansString = "";
+                var curr = trie;
+                string binary = ConverTO32BitString(Convert.ToString(i, 2));
+                foreach (char c in binary) {
+                    if (curr.children[c - '0' == 0 ? 1 : 0] != null)
+                    {
+                        ansString += c - '0' == 0 ? 1 : 0;
+                        curr = curr.children[c - '0' == 0 ? 1 : 0];
+                    }
+                    else
+                    {
+                        ansString += c - '0';
+                        curr = curr.children[c - '0'];
+                    }
+                }
+                ans = Math.Max(ans,Convert.ToInt32(ansString,2)^i);
+            }
+            return ans;
+        }
+
+        public string ConverTO32BitString(string s)
+        {
+            var bit32 = Enumerable.Repeat('0', 32 - s.Length).ToArray();
+            var s3=new string(bit32)+s;
+            return s3;
+        }
+        #endregion
     }
 }

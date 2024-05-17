@@ -88,12 +88,13 @@ namespace StriverSDE
 
             #region Trie
 
-            //Trie t = new Trie();
+            Trie t = new Trie();
             //var ans=t.PowerSet("abc"); 
             //foreach(var i in ans)
             //{
             //    Console.WriteLine(i);
             //}
+            t.FindMaximumXOR(new int[] { 3, 10, 5, 25, 2, 8 });
             #endregion
 
             #region String
