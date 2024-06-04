@@ -48,6 +48,7 @@
     <Compile Include="BinarySearch.cs" />
     <Compile Include="BinarySearchTree.cs" />
     <Compile Include="BitManipulation.cs" />
+    <Compile Include="DP_AdityaVerma.cs" />
     <Compile Include="DynamicProgramming.cs" />
     <Compile Include="Greedy.cs" />
     <Compile Include="Heap.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recursion.cs" />
+    <Compile Include="Recursion_AdityaVerma.cs" />
     <Compile Include="StackandQueue.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="Trie.cs" />

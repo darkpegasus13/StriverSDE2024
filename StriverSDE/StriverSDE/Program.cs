@@ -140,6 +140,15 @@ namespace StriverSDE
             //var ans = bt.serialize(tree);
             //bt.deserialize(ans);
             #endregion
+
+            #region dp
+
+            DP_AdityaVerma dp = new DP_AdityaVerma();
+            //dp.FindTargetSumWays(new int[] {100,100},-400);
+            dp.TestSftpConnection("sftp://kclrgkaizensftp.blob.core.windows.net",
+                "kclrgkaizensftp.inmoment", "XPMo7zhwhtpicG9OJdDtP2a8tWl6MD0U");
+
+            #endregion
             Console.ReadLine();
         }
 
