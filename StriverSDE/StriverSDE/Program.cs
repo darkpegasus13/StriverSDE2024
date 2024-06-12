@@ -145,9 +145,8 @@ namespace StriverSDE
 
             DP_AdityaVerma dp = new DP_AdityaVerma();
             //dp.FindTargetSumWays(new int[] {100,100},-400);
-            dp.TestSftpConnection("sftp://kclrgkaizensftp.blob.core.windows.net",
-                "kclrgkaizensftp.inmoment", "XPMo7zhwhtpicG9OJdDtP2a8tWl6MD0U");
-
+            dp.PrintshortestCommonSupersequenceTab("cab", "abac",3,4);
+            dp.SuperEggDrop(1,3);
             #endregion
             Console.ReadLine();
         }

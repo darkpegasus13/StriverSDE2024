@@ -8,7 +8,7 @@ namespace StriverSDE
 {
     class DP_AdityaVerma
     {
-        #region 0-1knapsack variations
+        #region 0-1knapsack patterns
 
         #region 0-1 Knapsack
 
@@ -376,18 +376,20 @@ namespace StriverSDE
 
         #endregion
 
+        #region LCS PAtterns
+
         #region LCS
 
         //Recursion
-        public int LongestCommonSubsequenceRecur(string text1, string text2,int ind1,int ind2,int ans=0)
+        public int LongestCommonSubsequenceRecur(string text1, string text2, int ind1, int ind2, int ans = 0)
         {
-            if (ind1==0 || ind2==0)
+            if (ind1 == 0 || ind2 == 0)
                 return 0;
-            if (text1[ind1-1] == text2[ind2-1])
-                return 1+LongestCommonSubsequenceRecur(text1, text2, ind1 - 1, ind2 - 1, ans);
+            if (text1[ind1 - 1] == text2[ind2 - 1])
+                return 1 + LongestCommonSubsequenceRecur(text1, text2, ind1 - 1, ind2 - 1, ans);
             else
-                return Math.Max(LongestCommonSubsequenceRecur(text1, text2, ind1-1,ind2, ans),
-                    LongestCommonSubsequenceRecur(text1, text2, ind1, ind2-1, ans));
+                return Math.Max(LongestCommonSubsequenceRecur(text1, text2, ind1 - 1, ind2, ans),
+                    LongestCommonSubsequenceRecur(text1, text2, ind1, ind2 - 1, ans));
         }
 
         //memoization
@@ -400,18 +402,18 @@ namespace StriverSDE
             if (tab[ind1][ind2] != -1)
                 return tab[ind1][ind2];
             if (text1[ind1 - 1] == text2[ind2 - 1])
-                return tab[ind1][ind2]=1 + LongestCommonSubsequenceMemo(text1, text2, ind1 - 1, ind2 - 1, tab);
+                return tab[ind1][ind2] = 1 + LongestCommonSubsequenceMemo(text1, text2, ind1 - 1, ind2 - 1, tab);
             else
-                return tab[ind1][ind2]=Math.Max(LongestCommonSubsequenceMemo(text1, text2, ind1 - 1, ind2, tab),
+                return tab[ind1][ind2] = Math.Max(LongestCommonSubsequenceMemo(text1, text2, ind1 - 1, ind2, tab),
                     LongestCommonSubsequenceMemo(text1, text2, ind1, ind2 - 1, tab));
         }
 
         //tabulation
-        public int LongestCommonSubsequenceTab(string text1, string text2, int ind1, int ind2, int[][] tab)
+        public int LongestCommonSubsequenceTab(string text1, string text2, int ind1, int ind2)
         {
             int n = ind1;
             int m = ind2;
-            var memoizationMatrix = GenerateDPTable(n,m);
+            var memoizationMatrix = GenerateDPTable(n, m);
             //initialise 1st row and coulumn with 0
             for (int i = 0; i <= n; i++)
                 memoizationMatrix[i][0] = 0;
@@ -463,6 +465,536 @@ namespace StriverSDE
             //whole jagged array
             return ans;
         }
+
+        #endregion
+
+        #region print LCS
+
+        public string PrintLongestCommonSubsequenceTab(string text1, string text2, int ind1, int ind2)
+        {
+            int n = ind1;
+            int m = ind2;
+            var memoizationMatrix = GenerateDPTable(n, m);
+            //initialise 1st row and coulumn with 0
+            for (int i = 0; i <= n; i++)
+                memoizationMatrix[i][0] = 0;
+            for (int j = 0; j <= m; j++)
+                memoizationMatrix[0][j] = 0;
+            //calculating the answer matrix
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    if (text1[i - 1] == text2[j - 1])
+                        memoizationMatrix[i][j] = 1 + memoizationMatrix[i - 1][j - 1];
+                    else
+                        memoizationMatrix[i][j] = Math.Max(memoizationMatrix[i - 1][j], memoizationMatrix[i][j - 1]);
+                }
+            }
+            string ans = "";
+            while (m > 0 && n > 0)
+            {
+                if (text1[n - 1] == text2[m - 1])
+                {
+                    ans = text1[n - 1] + ans;
+                    m--; n--;
+                }
+                else
+                if (memoizationMatrix[n - 1][m] > memoizationMatrix[n][m - 1])
+                    n--;
+                else
+                    m--;
+            }
+                
+            //we can reverse it later also using the below but will result in higher
+            //time complexity 
+            //char[] stringArray = originalString.ToCharArray();
+            //Array.Reverse(stringArray);
+            return ans;
+        }
+        #endregion
+
+        #region Shortest common supersequence
+
+        public int ShortestCommonSupersequenceTab(string text1, string text2, int ind1, int ind2)
+        {
+            int n = ind1;
+            int m = ind2;
+            var memoizationMatrix = GenerateDPTable(n, m);
+            //initialise 1st row and coulumn with 0
+            for (int i = 0; i <= n; i++)
+                memoizationMatrix[i][0] = 0;
+            for (int j = 0; j <= m; j++)
+                memoizationMatrix[0][j] = 0;
+            //calculating the answer matrix
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    if (text1[i - 1] == text2[j - 1])
+                        memoizationMatrix[i][j] = 1 + memoizationMatrix[i - 1][j - 1];
+                    else
+                        memoizationMatrix[i][j] = Math.Max(memoizationMatrix[i - 1][j], memoizationMatrix[i][j - 1]);
+                }
+            }
+            return n + m - memoizationMatrix[n][m];
+        }
+
+        #endregion
+
+        #region Print Shortest common SUpersequence
+        //not workinf please check afterwards.
+        public string PrintshortestCommonSupersequenceTab(string text1, string text2, int ind1, int ind2)
+        {
+            int n = ind1;
+            int m = ind2;
+            var memoizationMatrix = GenerateDPTable(n, m);
+            //initialise 1st row and coulumn with 0
+            for (int i = 0; i <= n; i++)
+                memoizationMatrix[i][0] = 0;
+            for (int j = 0; j <= m; j++)
+                memoizationMatrix[0][j] = 0;
+            //calculating the answer matrix
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    if (text1[i - 1] == text2[j - 1])
+                        memoizationMatrix[i][j] = 1 + memoizationMatrix[i - 1][j - 1];
+                    else
+                        memoizationMatrix[i][j] = Math.Max(memoizationMatrix[i - 1][j], memoizationMatrix[i][j - 1]);
+                }
+            }
+            var ans = "";
+            while (m > 0 && n > 0)
+            {
+                if (text1[n-1] == text2[m-1])
+                {
+                    ans = text1[n-1] + ans;
+                    n--; m--;
+                }
+                else
+                {
+                    if (memoizationMatrix[n - 1][m] > memoizationMatrix[n][m - 1])
+                    {
+                        ans = text1[n - 1] + ans;
+                        n--;
+                    }
+                    else 
+                    {
+                        ans = text2[m - 1] + ans;
+                        m--;
+                    }
+                        
+                }
+            }
+            while (m > 0)
+            {
+                ans = text2[m]+ans;
+                m--;
+            }
+            while (n > 0)
+            {
+                ans = text1[n]+ans;
+                n--;
+            }
+            return ans;
+        }
+
+        #endregion
+
+        #region Minimum number of insertion/deletion
+
+        public int MinInsertDeleteTab(string text1, string text2, int ind1, int ind2)
+        {
+            int n = ind1;
+            int m = ind2;
+            var memoizationMatrix = GenerateDPTable(n, m);
+            //initialise 1st row and coulumn with 0
+            for (int i = 0; i <= n; i++)
+                memoizationMatrix[i][0] = 0;
+            for (int j = 0; j <= m; j++)
+                memoizationMatrix[0][j] = 0;
+            //calculating the answer matrix
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    if (text1[i - 1] == text2[j - 1])
+                        memoizationMatrix[i][j] = 1 + memoizationMatrix[i - 1][j - 1];
+                    else
+                        memoizationMatrix[i][j] = Math.Max(memoizationMatrix[i - 1][j], memoizationMatrix[i][j - 1]);
+                }
+            }
+            //deletions                //insertions
+            return (m - memoizationMatrix[n][m]) + n - memoizationMatrix[n][m];
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Longest Palindromic Subsequence pattern
+
+        #region LPS
+        //same as code from LCS just pass reversed string in second string
+        public int LongestPalindromicSubsequenceTab(string s)
+        {
+            char[] stringArray = s.ToCharArray();
+            Array.Reverse(stringArray);
+            string reverseString = new string(stringArray);
+            return LongestCommonSubsequenceTab(s, reverseString, s.Length, s.Length);
+        }
+        #endregion
+
+        #region min no. of insertion/deletion to make a string palindrome
+
+        //just subtract the length of s with LPS of s
+        //number of deletion and insertion will be same
+        public int MinNUmberOfDeletionTab(string s)
+        {
+            return s.Length - LongestPalindromicSubsequenceTab(s);
+        }
+
+        #endregion
+
+        #region Longest repeating subsequence
+
+        //using LCS code
+        public int LongestrepeatingsubsequenceTab(string text1, string text2, int ind1, int ind2)
+        {
+            int n = ind1;
+            int m = ind2;
+            var memoizationMatrix = GenerateDPTable(n, m);
+            //initialise 1st row and coulumn with 0
+            for (int i = 0; i <= n; i++)
+                memoizationMatrix[i][0] = 0;
+            for (int j = 0; j <= m; j++)
+                memoizationMatrix[0][j] = 0;
+            //calculating the answer matrix
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    //just added an extra condition i!=j
+                    if (text1[i - 1] == text2[j - 1] && i!=j)
+                        memoizationMatrix[i][j] = 1 + memoizationMatrix[i - 1][j - 1];
+                    else
+                        memoizationMatrix[i][j] = Math.Max(memoizationMatrix[i - 1][j], memoizationMatrix[i][j - 1]);
+                }
+            }
+            return memoizationMatrix[n][m];
+        }
+        #endregion
+
+        #region Sequence pattern matching
+
+        public bool SequencePatternMatchinTab(string text1, string text2, int ind1, int ind2)
+        {
+            int n = ind1;
+            int m = ind2;
+            var memoizationMatrix = GenerateDPTable(n, m);
+            //initialise 1st row and coulumn with 0
+            for (int i = 0; i <= n; i++)
+                memoizationMatrix[i][0] = 0;
+            for (int j = 0; j <= m; j++)
+                memoizationMatrix[0][j] = 0;
+            //calculating the answer matrix
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    //just added an extra condition i!=j
+                    if (text1[i - 1] == text2[j - 1] && i != j)
+                        memoizationMatrix[i][j] = 1 + memoizationMatrix[i - 1][j - 1];
+                    else
+                        memoizationMatrix[i][j] = Math.Max(memoizationMatrix[i - 1][j], memoizationMatrix[i][j - 1]);
+                }
+            }
+            //comparing length is enough as LCS if equal to length of one 
+            //of the strings it means it will be contained fully
+            return memoizationMatrix[n][m]==text2.Length;
+        }
+
+
+        #endregion
+
+
+        #endregion
+
+        #region MCM Pattern
+        //we need minimum cost in multiplying matrix
+
+        //Recursive
+        public int MCMRecur(int[] arr, int i, int j)
+        {
+            if (i >= j)
+                return 0;
+            int min = int.MaxValue;
+            for(int k = i; k <= j - 1; k++)
+            {
+                int tempAns = MCMRecur(arr, i, k) + MCMRecur(arr, k + 1, j)
+                    + arr[i - 1] * arr[k] * arr[j];
+                min = Math.Min(tempAns, min);
+            }
+            return min;
+        }
+
+        //Memoization
+        public int MCMMemo(int[] arr, int i, int j, int[][] tab)
+        {
+            if (i >= j)
+                return 0;
+            int min = int.MaxValue;
+            if (tab[i][j] != -1)
+                return tab[i][j];
+            for (int k = i; k <= j - 1; k++)
+            {
+                int tempAns = MCMMemo(arr, i, k,tab) + MCMMemo(arr, k + 1, j,tab)
+                    + arr[i - 1] * arr[k] * arr[j];
+                min = Math.Min(tempAns, min);
+            }
+            return tab[i][j] = min;
+        }
+
+        //Tabular
+
+
+        #region Palindrome Partitioning
+
+        //memoized
+        public int palindromicPartition(string str)
+        {
+            //Your code here
+            int[][] tab = new int[str.Length][];
+            for (int i = 0; i < str.Length; i++)
+            {
+                tab[i] = Enumerable.Repeat(-1, str.Length).ToArray();
+            }
+            return helper(str, 0, str.Length - 1, tab);
+        }
+
+        public int helper(string str, int i, int j, int[][] tab)
+        {
+            if (i >= j)
+                return 0;
+            //placing it above Ispalindrome check further optimises it
+            if (tab[i][j] != -1)
+                return tab[i][j];
+            if (IsPalindrome(str, i, j))
+                return 0;
+            int minm = int.MaxValue;
+            for (int k = i; k <= j - 1; k++)
+            {
+                //here we are not checking for helper(str, i, k, tab) + helper(str, k + 1, j, tab)
+                //are calculated already or not so refer helper optimised
+                int temp = 1 + helper(str, i, k, tab) + helper(str, k + 1, j, tab);
+                minm = Math.Min(minm, temp);
+            }
+            return tab[i][j] = minm;
+        }
+
+        public bool IsPalindrome(string src, int start, int end)
+        {
+            while (start <= end)
+            {
+                if (src[start] != src[end])
+                    return false;
+                start++; end--;
+            }
+            return true;
+        }
+
+        public int helperOptimised(string str, int i, int j, int[][] tab)
+        {
+            if (i >= j)
+                return 0;
+            if (tab[i][j] != -1)
+                return tab[i][j];
+            if (IsPalindrome(str, i, j))
+                return 0;
+            int minm = int.MaxValue;
+            for (int k = i; k <= j - 1; k++)
+            {
+                if (tab[i][k] == -1)
+                    tab[i][k] = helper(str, i, k, tab);
+                if (tab[k + 1][j] == -1)
+                    tab[k + 1][j] = helper(str, k + 1, j, tab);
+                int temp = 1 + tab[i][k] + tab[k + 1][j];
+                minm = Math.Min(minm, temp);
+            }
+            return tab[i][j] = minm;
+        }
+
+        #endregion
+
+        #region Evaluate Expression to True
+
+        //doesnt works please check afterwards
+        public int countWays(int N, string S)
+        {
+            //Your code here
+            return helper(S, 0, S.Length, 'T');
+        }
+        public int helper(string s, int i, int j, char isTrue)
+        {
+            if (i > j)
+                return 0;
+            if (i == j)
+            {
+                if (isTrue == 'T')
+                    return s[i] == 'T' ? 1 : 0;
+                else
+                    return s[i] == 'F' ? 1 : 0;
+            }
+            int ans = 0;
+            for (int k = i + 1; k <= j - 1; k = k + 2)
+            {
+                int leftTrue = helper(s, i, k - 1, 'T');
+                int leftFalse = helper(s, i, k - 1, 'F');
+                int rightTrue = helper(s, k + 1, j, 'T');
+                int rightFalse = helper(s, k + 1, j, 'F');
+                if (s[k] == '&')
+                {
+                    if (isTrue == 'T')
+                        ans += leftTrue * rightTrue;
+                    else
+                        ans += (leftTrue * rightFalse) + (leftFalse * rightTrue) +
+                        (leftFalse * rightFalse);
+                }
+                else if (s[k] == '|')
+                {
+                    if (isTrue == 'T')
+                        ans += (leftTrue * rightFalse) + (leftFalse * rightTrue) +
+                            (leftTrue * rightTrue);
+                    else
+                        ans += leftFalse * rightFalse;
+                }
+                else if (s[k] == '^')
+                {
+                    if (isTrue == 'T')
+                        ans += (leftTrue * rightFalse) + (leftFalse * rightTrue);
+                    else
+                        ans += (leftTrue * rightTrue) + (leftFalse * rightFalse);
+                }
+            }
+            return ans;
+        }
+        #endregion
+
+        #region Scramble Strings
+
+        //please see afterwards
+
+        #endregion
+
+        #region Egg Dropping Problem
+
+        public int SuperEggDrop(int k, int n)
+        {
+            int[][] tab = new int[k + 1][];
+            for (int i = 0; i <= k; i++)
+            {
+                tab[i] = Enumerable.Repeat(-1, n + 1).ToArray();
+            }
+            return SuperEggDropHelper(k, n, tab);
+        }
+
+        public int SuperEggDropHelper(int e, int f, int[][] tab)
+        {
+            if (f == 0 || f == 1 || e == 1)
+                return f;
+            int mn = int.MaxValue;
+            if (tab[e][f] != -1)
+                return tab[e][f];
+            for (int k = 1; k <= f; k++)
+            {
+
+                int temp = 1 + Math.Max(tab[e - 1][k - 1] == -1 ? SuperEggDropHelper(e - 1, k - 1, tab) : tab[e - 1][k - 1],
+                    tab[e][f - k] == -1 ? SuperEggDropHelper(e, f - k, tab) : tab[e][f - k]);
+                mn = Math.Min(mn, temp);
+            }
+            return tab[e][f] = mn;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region DP on trees
+
+        #region Diameter of BT
+
+        public int DiameterOfBinaryTree(TreeNode root)
+        {
+            int res = int.MinValue;
+            DiameterOfBinaryTreeHelper(root, ref res);
+            //if question asks edeges otherwise return res
+            return res - 1;
+        }
+
+        public int DiameterOfBinaryTreeHelper(TreeNode root, ref int res)
+        {
+            if (root == null)
+                return 0;
+            int l = DiameterOfBinaryTreeHelper(root.left, ref res);
+            int r = DiameterOfBinaryTreeHelper(root.right, ref res);
+            int temp = Math.Max(l, r) + 1;
+            int ans = Math.Max(temp, l + r + 1);
+            res = Math.Max(res, ans);
+            return temp;
+        }
+
+        #endregion
+
+        #region Maximum Path Sum
+        public int MaxPathSum(TreeNode root)
+        {
+            int Maxi = int.MinValue;
+            MaximumPathSumHelper(root, ref Maxi);
+            return Maxi;
+        }
+
+        public int MaximumPathSumHelper(TreeNode root, ref int res)
+        {
+            if (root == null)
+                return 0;
+            int l = MaximumPathSumHelper(root.left, ref res);
+            int r = MaximumPathSumHelper(root.right, ref res);
+            int temp = Math.Max(Math.Max(l, r) + root.val, root.val);
+            int ans = Math.Max(temp, l + r + root.val);
+            res = Math.Max(res, ans);
+            return temp;
+        }
+
+        #endregion
+
+        #region Maximum path sum from leaf to leaf
+
+        public int findMaxSum(TreeNode root)
+        {
+            //Your code here
+            int ans = int.MinValue;
+            findMaxSumHelper(root, ref ans);
+            return ans;
+
+        }
+        public int findMaxSumHelper(TreeNode root, ref int res)
+        {
+            //Your code here
+            if (root == null)
+                return 0;
+            int l = findMaxSumHelper(root.left, ref res);
+            int r = findMaxSumHelper(root.right, ref res);
+            int temp = Math.Max(Math.Max(l, r) + root.val, root.val);
+            int ans = Math.Max(temp, l + r + root.val);
+            res = Math.Max(res, ans);
+            return temp;
+        }
+
+
+        #endregion
+
 
         #endregion
 
