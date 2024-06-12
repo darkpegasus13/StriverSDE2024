@@ -147,6 +147,7 @@ namespace StriverSDE
             //dp.FindTargetSumWays(new int[] {100,100},-400);
             dp.PrintshortestCommonSupersequenceTab("cab", "abac",3,4);
             dp.SuperEggDrop(1,3);
+            dp.WordBreak("catsandog", new List<string>() { "cats", "dog", "sand", "and", "cat" });
             #endregion
             Console.ReadLine();
         }
