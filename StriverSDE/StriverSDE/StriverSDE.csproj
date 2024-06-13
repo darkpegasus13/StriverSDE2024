@@ -50,6 +50,7 @@
     <Compile Include="BitManipulation.cs" />
     <Compile Include="DP_AdityaVerma.cs" />
     <Compile Include="DynamicProgramming.cs" />
+    <Compile Include="Graph.cs" />
     <Compile Include="Greedy.cs" />
     <Compile Include="Heap.cs" />
     <Compile Include="LinkedList.cs" />

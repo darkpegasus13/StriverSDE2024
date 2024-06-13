@@ -759,41 +759,6 @@ namespace StriverSDE
 
         //Tabular
 
-        #region Word Break
-        
-        public bool WordBreak(string s, IList<string> wordDict)
-        {
-            int n = s.Length;
-            int[][] tab = new int[n][];
-            for (int i = 0; i < n; i++)
-            {
-                tab[i] = Enumerable.Repeat(-1, n).ToArray();
-            }
-            MCMRecur(s, 0, s.Length - 1, wordDict, tab);
-            return tab[0][n - 1] == 0 ? false : true;
-        }
-        public int MCMRecur(string s, int i, int j, IList<string> words, int[][] tab)
-        {
-            if (i > j)
-                return 0;
-            if (tab[i][j] != -1)
-                return tab[i][j];
-            var temp = s.Substring(i, j - i + 1);
-            if (words.Contains(temp))
-                return tab[i][j] = 1;
-            for (int k = i; k <= j - 1; k++)
-            {
-                int left = MCMRecur(s, i, k, words, tab);
-                int right = MCMRecur(s, k + 1, j, words, tab);
-                int tempAns = left + right == 2 ? 1 : 0;
-                if (tempAns == 1)
-                    return tab[i][j] = 1;
-            }
-            return tab[i][j] = 0;
-        }
-
-        #endregion
-
         #region Palindrome Partitioning
 
         //memoized
