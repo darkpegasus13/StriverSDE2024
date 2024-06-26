@@ -82,7 +82,7 @@ namespace StriverSDE
             //       new char[]{ '3', '0','6', '.', '0','8', '4', '0', '0' },
             //});
             recur.FloodFill(new int[][]{new int[]{ 0,0, 0 },
-            new int[]{ 0, 0, 0 } },0,0,0);
+            new int[]{ 0, 0, 0 } }, 0, 0, 0);
 
             #endregion
 
@@ -100,7 +100,7 @@ namespace StriverSDE
             #region String
             Strings s = new Strings();
             //s.LongestPalindromeSubstring("babad");
-            s.CompareVersionOptimal("1.01","1.1");
+            s.CompareVersionOptimal("1.01", "1.1");
             #endregion
 
             #region Heap
@@ -145,9 +145,17 @@ namespace StriverSDE
 
             DP_AdityaVerma dp = new DP_AdityaVerma();
             //dp.FindTargetSumWays(new int[] {100,100},-400);
-            dp.PrintshortestCommonSupersequenceTab("cab", "abac",3,4);
-            dp.SuperEggDrop(1,3);
-            dp.WordBreak("catsandog", new List<string>() { "cats", "dog", "sand", "and", "cat" });
+            //dp.PrintshortestCommonSupersequenceTab("cab", "abac", 3, 4);
+            //dp.SuperEggDrop(1, 3);
+            //dp.WordBreak("catsandog", new List<string>() { "cats", "dog", "sand", "and", "cat" });
+            #endregion
+
+            #region Graph
+
+            Graph gr = new Graph();
+            gr.numIslands(new char[][] { new char[] { '0', '1' }, new char[] { '1', '0' },
+            new char[] { '1', '1' },new char[] { '1', '0' } });
+
             #endregion
             Console.ReadLine();
         }

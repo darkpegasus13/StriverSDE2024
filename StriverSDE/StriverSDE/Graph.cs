@@ -304,6 +304,165 @@ namespace StriverSDE
         }
 
         #endregion
+
+        #region Count no. of unique islands using bfs
+
+        public int numIslands(char[][] grid)
+        {
+            HashSet<List<Tuple<int, int>>> hs = new HashSet<List<Tuple<int, int>>>();
+            int R = grid.Length;
+            int C = grid[0].Length;
+            bool[,] vis = new bool[R, C];
+
+            // Call BFS for every unvisited vertex 
+            // Whenever we see an univisted vertex, 
+            // we increment res (number of islands) 
+            // also. 
+            int res = 0;
+            for (int i = 0; i < R; i++)
+            {
+                for (int j = 0; j < C; j++)
+                {
+                    if (grid[i][j] == '1' && !vis[i, j])
+                    {
+                        BFS(grid, vis, i, j,ref hs);
+                        res++;
+                    }
+                }
+            }
+            //returning set count as it will contain only distinct islands
+            //return res if want to find total number of islands
+            return hs.Count;
+        }
+
+        public void BFS(char[][] mat, bool[,] vis,
+                    int si, int sj, ref HashSet<List<Tuple<int, int>>> hs)
+        {
+            
+            // These arrays are used to get row and 
+            // column numbers of 8 neighbours of 
+            // a given cell 
+            int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
+            int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+            // Simple BFS first step, we enqueue 
+            // source and mark it as visited 
+            List<Tuple<int, int>> q = new List<Tuple<int, int>>();
+            q.Add(new Tuple<int, int>(si, sj));
+            vis[si, sj] = true;
+            List<Tuple<int, int>> temp = new List<Tuple<int, int>>();
+            temp.Add(new Tuple<int, int>(si,sj));
+            // Next step of BFS. We take out 
+            // items one by one from queue and 
+            // enqueue their unvisited adjacent 
+            while (q.Count != 0)
+            {
+                int i = q[0].Item1;
+                int j = q[0].Item2;
+                q.RemoveAt(0);
+
+                // Go through all 8 adjacent 
+                for (int k = 0; k < 8; k++)
+                {
+                    if (isSafe(mat, i + row[k],
+                            j + col[k], vis))
+                    {
+                        vis[i + row[k], j + col[k]] = true;
+                        //just added this extra logic to identify same islands
+                        var newTup = new Tuple<int, int>(i + row[k]-si, j + col[k]-sj);
+                        q.Add(newTup);
+                        temp.Add(newTup);
+                    }
+                }
+                //hashmap will only add distinct if same it wont add
+                hs.Add(temp);
+            }
+        }
+
+        public bool isSafe(char[][] mat, int i, int j,
+                            bool[,] vis)
+        {
+            return (i >= 0) && (i < mat.Length) &&
+                (j >= 0) && (j < mat[0].Length) &&
+                (mat[i][j] == '1' && !vis[i, j]);
+        }
+
+        #endregion
+
+        #region Bipartite Graph BFS
+
+        public bool isBipartite(int V, List<int>[] adj)
+        {
+            //considering visited to contain coloring info
+            //-1 not colored and 0 and 1 are two color
+            int[] visited = Enumerable.Repeat(-1, adj.Length).ToArray();
+            for (int i = 0; i < adj.Length; i++)
+            {
+                if (visited[i] == -1)
+                    if (!BipartiteBFSHelper(i, adj, visited))
+                        return false;
+            }
+            return true;
+        }
+
+        public bool BipartiteBFSHelper(int V, List<int>[] adj, int[] visited)
+        {
+            Queue<int> q = new Queue<int>();
+            q.Enqueue(V);
+            visited[V] = 0;
+            while (q.Count != 0)
+            {
+                int temp = q.Dequeue();
+                foreach (int i in adj[temp])
+                    if (visited[i] == -1)
+                    {
+                        q.Enqueue(i);
+                        visited[i] = visited[temp] == 0 ? 1 : 0;
+                    }
+                    else if (visited[temp] == visited[i])
+                        return false;
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region Bipartite Graph DFS
+        public bool IsBipartiteDFS(int V, List<int>[] adj)
+        {
+            //considering visited to contain coloring info
+            //-1 not colored and 0 and 1 are two color
+            int[] visited = Enumerable.Repeat(-1, adj.Length).ToArray();
+            for (int i = 0; i < V; i++)
+            {
+                if (visited[i] == -1)
+                    if (!BipartiteDFSHelper(i, adj, visited))
+                        return false;
+            }
+            return true;
+        }
+
+        public bool BipartiteDFSHelper(int V, List<int>[] adj, int[] visited,
+        int color = 0)
+        {
+
+            visited[V] = color;
+            foreach (int i in adj[V])
+            {
+                if (visited[i] == -1)
+                {
+                    if (!BipartiteDFSHelper(i, adj, visited, visited[V] == 0 ? 1 : 0))
+                        return false;
+                }
+                else if (visited[i] == visited[V])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        #endregion
     }
     public class Node
     {
