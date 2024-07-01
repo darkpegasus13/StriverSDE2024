@@ -8,6 +8,90 @@ namespace StriverSDE
 {
     class Graph
     {
+        private List<Tuple<int, int>>[] adj;
+        class Edge
+        {
+            public int src, dest, weight;
+            public Edge() { src = dest = weight = 0; }
+        };
+
+        int V, E;
+        Edge[] edge;
+
+        // Creates a graph with V vertices and E edges
+        Graph(int v, int e)
+        {
+            V = v;
+            E = e;
+            edge = new Edge[e];
+            for (int i = 0; i < e; ++i)
+                edge[i] = new Edge();
+        }
+        public void addEdge(int u, int v, int w)
+        {
+            adj[u].Add(Tuple.Create(v, w));
+            adj[v].Add(Tuple.Create(u, w));
+        }
+
+        #region Dijkstra
+
+        // prints shortest path from s
+        public void shortestPath(int s)
+        {
+            // Create a priority queue to store vertices that
+            // are being preprocessed.
+            var pq = new PriorityQueue<Tuple<int, int>>();
+
+            // Create a vector for distances and initialize all
+            // distances as infinite (INF)
+            var dist = new int[V];
+            for (int i = 0; i < V; i++)
+                dist[i] = int.MaxValue;
+
+            // Insert source itself in priority queue and
+            // initialize its distance as 0.
+            pq.Enqueue(Tuple.Create(0, s));
+            dist[s] = 0;
+
+            /* Looping till priority queue becomes empty (or all
+            distances are not finalized) */
+            while (pq.Count != 0)
+            {
+                // The first vertex in pair is the minimum
+                // distance vertex, extract it from priority
+                // queue. vertex label is stored in second of
+                // pair (it has to be done this way to keep the
+                // vertices sorted distance (distance must be
+                // first item in pair)
+                var u = pq.Dequeue().Item2;
+
+                // 'i' is used to get all adjacent vertices of a
+                // vertex
+                foreach (var i in adj[u])
+                {
+                    // Get vertex label and weight of current
+                    // adjacent of u.
+                    int v = i.Item1;
+                    int weight = i.Item2;
+
+                    //  If there is shorted path to v through u.
+                    if (dist[v] > dist[u] + weight)
+                    {
+                        // Updating distance of v
+                        dist[v] = dist[u] + weight;
+                        pq.Enqueue(Tuple.Create(dist[v], v));
+                    }
+                }
+            }
+
+            // Print shortest distances stored in dist[]
+            Console.WriteLine("Vertex Distance from Source");
+            for (int i = 0; i < V; ++i)
+                Console.WriteLine("{0}\t\t{1}", i, dist[i]);
+        }
+
+        #endregion 
+
         #region BFS
         public List<int> bfsOfGraph(int V, List<int>[] adj)
         {
@@ -121,7 +205,7 @@ namespace StriverSDE
                 {
                     //returning true as only if true as if it is false there may be other 
                     //nodes where there may be a cycle
-                    if(isCycleHelperdfs(i, adj, visited, V))
+                    if (isCycleHelperdfs(i, adj, visited, V))
                         return true;
                 }
             }
@@ -230,7 +314,7 @@ namespace StriverSDE
                 ans.Add(ele);
             }
             //as if it is equal there is no cycle
-            return ans.Count!=adj.Length;
+            return ans.Count != adj.Length;
         }
 
         #endregion
@@ -258,8 +342,8 @@ namespace StriverSDE
                 if (degrees[i] == 0)
                     q.Enqueue(i);
             }
-           //reducing the count to the items to which the removed
-           //node was pointing
+            //reducing the count to the items to which the removed
+            //node was pointing
             while (q.Count != 0)
             {
                 var ele = q.Dequeue();
@@ -325,7 +409,7 @@ namespace StriverSDE
                 {
                     if (grid[i][j] == '1' && !vis[i, j])
                     {
-                        BFS(grid, vis, i, j,ref hs);
+                        BFS(grid, vis, i, j, ref hs);
                         res++;
                     }
                 }
@@ -338,7 +422,7 @@ namespace StriverSDE
         public void BFS(char[][] mat, bool[,] vis,
                     int si, int sj, ref HashSet<List<Tuple<int, int>>> hs)
         {
-            
+
             // These arrays are used to get row and 
             // column numbers of 8 neighbours of 
             // a given cell 
@@ -351,7 +435,7 @@ namespace StriverSDE
             q.Add(new Tuple<int, int>(si, sj));
             vis[si, sj] = true;
             List<Tuple<int, int>> temp = new List<Tuple<int, int>>();
-            temp.Add(new Tuple<int, int>(si,sj));
+            temp.Add(new Tuple<int, int>(si, sj));
             // Next step of BFS. We take out 
             // items one by one from queue and 
             // enqueue their unvisited adjacent 
@@ -369,7 +453,7 @@ namespace StriverSDE
                     {
                         vis[i + row[k], j + col[k]] = true;
                         //just added this extra logic to identify same islands
-                        var newTup = new Tuple<int, int>(i + row[k]-si, j + col[k]-sj);
+                        var newTup = new Tuple<int, int>(i + row[k] - si, j + col[k] - sj);
                         q.Add(newTup);
                         temp.Add(newTup);
                     }
@@ -463,7 +547,215 @@ namespace StriverSDE
         }
 
         #endregion
+
+        #region Dijkshtra's algo 
+
+        //using priority queue
+        //this is a custom PQ we created <dist,node>
+        SortedSet<Tuple<int, int>> pq = new SortedSet<Tuple<int, int>>
+            (Comparer<Tuple<int, int>>.Create((a, b) =>
+        {
+            int cmp = a.Item1.CompareTo(b.Item1);
+            return cmp == 0 ? a.Item2.CompareTo(b.Item2) : cmp;
+        }));
+
+
+        public List<int> dijkstra(int V, List<List<int>>[] adj, int S)
+        {
+            StringBuilder sb = new StringBuilder(S.ToString());
+            int[] dist = Enumerable.Repeat(int.MaxValue,V).ToArray();
+            dist[S] = 0;
+            pq.Add(new Tuple<int, int>(0, S));
+            while (pq.Count!=0)
+            {
+                var temp = pq.Min.Item2;
+                pq.Remove(pq.Min);
+
+                foreach(var cur in adj[temp])
+                {
+                    int v = cur[0];
+                    int weight = cur[1];
+
+                    if (dist[v] > dist[temp] + weight)
+                    {
+                        //for getting the path
+                        sb.Append(v);
+                        dist[v] = dist[temp] + weight;
+                        pq.Add(new Tuple<int, int>(weight, v));
+                    }
+                }
+            }
+            return dist.ToList();
+        }
+
+        #endregion
+
+        #region KosaRajus Algo(strongly connected comps(node can reach every other node))
+
+        //it has three steps
+        //sort according to finish time (topo sort)
+        //reverse the graph(transpose)
+        //apply dfs according to topo sort
+        public int kosaraju(int V, List<List<int>> adj)
+        {
+            //Your code here
+            //step 1 
+            Stack<int> st = new Stack<int>();
+            int[] visited = new int[V];
+            for (int i = 0; i < V; i++)
+            {
+                if (visited[i] == 0)
+                    topoSortDFSHelper(i, adj, visited, ref st);
+            }
+            //step 2 
+            List<List<int>> rev_Adj = new List<List<int>>();
+            for (int i = 0; i < V; i++)
+            {
+                rev_Adj.Add(new List<int>());
+            }
+            for (int i = 0; i < V; i++)
+                foreach (int j in adj[i])
+                    rev_Adj[j].Add(i);
+            //step 3
+            visited = new int[adj.Count];
+            var cnt = 0;
+            while (st.Count != 0)
+            {
+                var temp = st.Pop();
+                if (visited[temp] != 1)
+                {
+                    cnt++;
+                    dfsOfGraphHelper(temp, rev_Adj, visited);
+                }
+            }
+            return cnt;
+        }
+
+        public void dfsOfGraphHelper(int v, List<List<int>> adj, int[] visited)
+        {
+            visited[v] = 1;
+            foreach (int i in adj[v])
+            {
+                if (visited[i] != 1)
+                    dfsOfGraphHelper(i, adj, visited);
+            }
+        }
+
+        #endregion
+
+        #region Floyd Warshal Algo
+
+        //the bellman and dijkshtras are for single source shortest path
+        //but this is a multisource we try to go from all the vertex
+
+        //if any of the diagnol becomes less than 0 it has a negative
+        //cycle
+
+        public void shortest_distance(List<List<int>> matrix)
+        {
+            int n = matrix.Count();
+            //setting the matrix according to our implementation
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (matrix[i][j] == -1)
+                        matrix[i][j] = int.MaxValue;
+                    if (i == j)
+                        matrix[i][j] = 0;
+                }
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    for (int k = 0; k < n; k++)
+                    {
+                        int curr;
+                        if (matrix[j][i] == int.MaxValue || matrix[i][k] == int.MaxValue)
+                            curr = int.MaxValue;
+                        else
+                            curr = matrix[j][i] + matrix[i][k];
+                        matrix[j][k] = Math.Min(curr, matrix[j][k]);
+                    }
+                }
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (matrix[i][j] == int.MaxValue)
+                        matrix[i][j] = -1;
+                }
+            }
+        }
+
+        #endregion
+
+        #region bellman ford algo works for negative weights as well
+
+        //but it works for directed graph only 
+
+        void BellmanFord(Graph graph, int src)
+        {
+            int V = graph.V, E = graph.E;
+            int[] dist = new int[V];
+
+            // Step 1: Initialize distances from src to all
+            // other vertices as INFINITE
+            for (int i = 0; i < V; ++i)
+                dist[i] = int.MaxValue;
+            dist[src] = 0;
+
+            // Step 2: Relax all edges |V| - 1 times. A simple
+            // shortest path from src to any other vertex can
+            // have at-most |V| - 1 edges
+            for (int i = 1; i < V; ++i)
+            {
+                for (int j = 0; j < E; ++j)
+                {
+                    int u = graph.edge[j].src;
+                    int v = graph.edge[j].dest;
+                    int weight = graph.edge[j].weight;
+                    if (dist[u] != int.MaxValue
+                        && dist[u] + weight < dist[v])
+                        dist[v] = dist[u] + weight;
+                }
+            }
+
+            // Step 3: check for negative-weight cycles. The
+            // above step guarantees shortest distances if graph
+            // doesn't contain negative weight cycle. If we get
+            // a shorter path, then there is a cycle.
+            for (int j = 0; j < E; ++j)
+            {
+                int u = graph.edge[j].src;
+                int v = graph.edge[j].dest;
+                int weight = graph.edge[j].weight;
+                if (dist[u] != int.MaxValue
+                    && dist[u] + weight < dist[v])
+                {
+                    Console.WriteLine(
+                        "Graph contains negative weight cycle");
+                    return;
+                }
+            }
+            printArr(dist, V);
+        }
+
+        void printArr(int[] dist, int V)
+        {
+            Console.WriteLine("Vertex Distance from Source");
+            for (int i = 0; i < V; ++i)
+                Console.WriteLine(i + "\t\t" + dist[i]);
+        }
+
+        #endregion
     }
+
+
     public class Node
     {
         public int val;
@@ -485,6 +777,100 @@ namespace StriverSDE
         {
             val = _val;
             neighbors = _neighbors;
+        }
+    }
+
+    public class PriorityQueue<T>
+    {
+        private readonly List<T> _data;
+        private readonly Comparison<T> _compare;
+
+        public PriorityQueue()
+            : this(Comparer<T>.Default)
+        {
+        }
+
+        public PriorityQueue(IComparer<T> comparer)
+            : this(comparer.Compare)
+        {
+        }
+
+        public PriorityQueue(Comparison<T> comparison)
+        {
+            _data = new List<T>();
+            _compare = comparison;
+        }
+
+        public void Enqueue(T item)
+        {
+            _data.Add(item);
+            var childIndex = _data.Count - 1;
+
+            while (childIndex > 0)
+            {
+                var parentIndex = (childIndex - 1) / 2;
+                if (_compare(_data[childIndex],
+                             _data[parentIndex])
+                    >= 0)
+                    break;
+
+                T tmp = _data[childIndex];
+                _data[childIndex] = _data[parentIndex];
+                _data[parentIndex] = tmp;
+
+                childIndex = parentIndex;
+            }
+        }
+
+        public T Dequeue()
+        {
+            // assumes pq is not empty; up to calling code
+            var lastElement = _data.Count - 1;
+
+            var frontItem = _data[0];
+            _data[0] = _data[lastElement];
+            _data.RemoveAt(lastElement);
+
+            --lastElement;
+
+            var parentIndex = 0;
+            while (true)
+            {
+                var childIndex = parentIndex * 2 + 1;
+                if (childIndex > lastElement)
+                    break; // End of tree
+
+                var rightChild = childIndex + 1;
+                if (rightChild <= lastElement
+                    && _compare(_data[rightChild],
+                                _data[childIndex])
+                           < 0)
+                    childIndex = rightChild;
+
+                if (_compare(_data[parentIndex],
+                             _data[childIndex])
+                    <= 0)
+                    break; // Correct position
+
+                T tmp = _data[parentIndex];
+                _data[parentIndex] = _data[childIndex];
+                _data[childIndex] = tmp;
+
+                parentIndex = childIndex;
+            }
+
+            return frontItem;
+        }
+
+        public T Peek()
+        {
+            T frontItem = _data[0];
+            return frontItem;
+        }
+
+        public int Count
+        {
+            get { return _data.Count; }
         }
     }
 }
