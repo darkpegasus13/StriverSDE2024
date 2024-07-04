@@ -563,15 +563,15 @@ namespace StriverSDE
         public List<int> dijkstra(int V, List<List<int>>[] adj, int S)
         {
             StringBuilder sb = new StringBuilder(S.ToString());
-            int[] dist = Enumerable.Repeat(int.MaxValue,V).ToArray();
+            int[] dist = Enumerable.Repeat(int.MaxValue, V).ToArray();
             dist[S] = 0;
             pq.Add(new Tuple<int, int>(0, S));
-            while (pq.Count!=0)
+            while (pq.Count != 0)
             {
                 var temp = pq.Min.Item2;
                 pq.Remove(pq.Min);
 
-                foreach(var cur in adj[temp])
+                foreach (var cur in adj[temp])
                 {
                     int v = cur[0];
                     int weight = cur[1];
@@ -756,12 +756,12 @@ namespace StriverSDE
 
         #region Prims algo MST
         //weight,node,parent
-        SortedSet<Tuple<int, int,int>> pqPrims = new SortedSet<Tuple<int, int,int>>
-            (Comparer<Tuple<int, int,int>>.Create((a, b) =>
-            {
-                int cmp = a.Item1.CompareTo(b.Item1);
-                return cmp == 0 ? a.Item2.CompareTo(b.Item2) : cmp;
-            }));
+        SortedSet<Tuple<int, int, int>> pqPrims = new SortedSet<Tuple<int, int, int>>
+            (Comparer<Tuple<int, int, int>>.Create((a, b) =>
+             {
+                 int cmp = a.Item1.CompareTo(b.Item1);
+                 return cmp == 0 ? a.Item2.CompareTo(b.Item2) : cmp;
+             }));
 
         public int spanningTree(int V, ref List<List<List<int>>> adj)
         {
@@ -790,6 +790,55 @@ namespace StriverSDE
             }
             return sum;
         }
+        #endregion
+
+        #region M coloring problem
+
+        bool isSafe(int v, int[,] graph, int[] color, int c)
+        {
+            for (int i = 0; i < V; i++)
+                if (graph[v, i] == 1 && c == color[i])
+                    return false;
+            return true;
+        }
+
+        /* A recursive utility function to solve m
+        coloring problem */
+        bool graphColoringUtil(int[,] graph, int m,
+                               int[] color, int v)
+        {
+            /* base case: If all vertices are assigned
+            a color then return true */
+            if (v == V)
+                return true;
+
+            /* Consider this vertex v and try different
+            colors */
+            for (int c = 1; c <= m; c++)
+            {
+                /* Check if assignment of color c to v
+                is fine*/
+                if (isSafe(v, graph, color, c))
+                {
+                    color[v] = c;
+
+                    /* recur to assign colors to rest
+                    of the vertices */
+                    if (graphColoringUtil(graph, m, color,
+                                          v + 1))
+                        return true;
+
+                    /* If assigning color c doesn't lead
+                    to a solution then remove it */
+                    color[v] = 0;
+                }
+            }
+
+            /* If no color can be assigned to this vertex
+            then return false */
+            return false;
+        }
+
         #endregion
 
         #region Kruskals Algorithm
